@@ -8,9 +8,14 @@ import java.sql.*;
 
 public class Withdrawal extends JFrame implements ActionListener{
     
-    JTextField t1,t2;
-    JButton b1,b2,b3;
-    JLabel l1,l2,l3,l4;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	JTextField t1;
+    JButton b1,b2;
+    JLabel l1,l2;
     String pin;
     
     Withdrawal(String pin){
@@ -27,13 +32,13 @@ public class Withdrawal extends JFrame implements ActionListener{
 		l3.setBounds(0, 0, 800, 750);    	// Ảnh nền sẽ phủ lên toàn bộ frame.
 		add(l3);						  	// Add l3 vào Frame.
         
-        l1 = new JLabel("MAXIMUM WITHDRAWAL IS RS.10,000");
+        l1 = new JLabel("Số tiền rút tối đa là 10.000.000 VND");
         l1.setForeground(Color.WHITE);
         l1.setFont(new Font("System", Font.BOLD, 16));
         l1.setBounds(150, 250, 300, 30);
         l3.add(l1);
         
-        l2 = new JLabel("PLEASE ENTER YOUR AMOUNT");
+        l2 = new JLabel("Nhập số tiền muốn rút:");
         l2.setForeground(Color.WHITE);
         l2.setFont(new Font("System", Font.BOLD, 16));
         l2.setBounds(150, 280, 300, 30);
@@ -41,15 +46,19 @@ public class Withdrawal extends JFrame implements ActionListener{
         
         // Ô rút tiền
         t1 = new JTextField();
-        t1.setFont(new Font("Raleway", Font.BOLD, 25));
+        t1.setFont(new Font("Raleway", Font.BOLD, 20));
         t1.setBounds(150, 320, 300, 30);
+        t1.setBorder(BorderFactory.createCompoundBorder(
+			    BorderFactory.createLineBorder(Color.GRAY, 1),
+			    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+			)); // Tạo viền màu xám, dày 1 pixel và thêm khoảng cách bên trong (padding) 5 pixel ở trên/dưới và 10 pixel ở trái/phải
         l3.add(t1);
         
-        b1 = new JButton("WITHDRAWAL");
+        b1 = new JButton("RÚT TIỀN");
         b1.setBounds(310, 380, 140, 30);
         l3.add(b1);
         
-        b2 = new JButton("BACK");
+        b2 = new JButton("QUAY LẠI");
         b2.setBounds(310, 420, 140, 30);
         l3.add(b2);
         
@@ -69,9 +78,9 @@ public class Withdrawal extends JFrame implements ActionListener{
             String amount = t1.getText();
             Date date = new Date();			// Lưu thời gian giao dịch rút tiền.
             
-            if(ae.getSource() == b1){		// Btn WITHDRAWAL
+            if(ae.getSource() == b1){		// Btn RÚT TIỀN
                 if(t1.getText().equals("")){	
-                    JOptionPane.showMessageDialog(null, "Please enter the Amount to you want to Withdraw");
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền bạn muốn rút!");
                 }else{
                     Conn c1 = new Conn();
                     
@@ -84,22 +93,27 @@ public class Withdrawal extends JFrame implements ActionListener{
 						- nếu hết dòng → trả về false */
                     
                     while(rs.next()){	// Lặp qua toàn bộ lịch sử giao dịch của user.
-                       if(rs.getString("type").equals("Deposit")){				// Type = Deposit
+                       if(rs.getString("type").equals("Deposit") || rs.getString("type").equals("Transfer In")){				// Type = Deposit hoặc Transfer In
                            balance += Integer.parseInt(rs.getString("amount"));	// Chuyển string sang Integer -> Cộng vào số dư
-                       }else{													// Type = Withdrawal
+                       }else{													// Type = Withdrawal hoặc Transfer Out
                            balance -= Integer.parseInt(rs.getString("amount"));	// Trừ vào số dư
                        }
+                    }
+
+                    if (Integer.parseInt(amount) > 10000000) {
+                        JOptionPane.showMessageDialog(null, "Số tiền rút tối đa không được vượt quá 10.000.000 VND!");
+                        return;
                     }
                     
                     // Kiểm tra số dư còn đủ để rút tiền?
                     if(balance < Integer.parseInt(amount)){		
-                        JOptionPane.showMessageDialog(null, "Insuffient Balance");
+                        JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");
                         return;  // Thoát 
                     }
                     
                     // Nếu đủ tiền -> Lưu giao dịch rút tiền vào DB.
                     c1.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Withdrawl', '"+amount+"')");
-                    JOptionPane.showMessageDialog(null, "Rs. "+amount+" Debited Successfully");		// Đã trừ thành công ? đồng.
+                    JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		// Đã trừ thành công ? đồng.
                     
                     setVisible(false);
                     new Transactions(pin).setVisible(true);		

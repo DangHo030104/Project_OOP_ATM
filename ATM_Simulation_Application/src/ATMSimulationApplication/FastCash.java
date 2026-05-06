@@ -8,9 +8,13 @@ import java.util.Date;
 
 public class FastCash extends JFrame implements ActionListener {
 
-    JLabel l1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	JLabel l1;
     JButton b1, b2, b3, b4, b5, b6, b7;
-    JTextField t1;
     String pin;
 
     FastCash(String pin) {  	
@@ -27,37 +31,37 @@ public class FastCash extends JFrame implements ActionListener {
 		l3.setBounds(0, 0, 800, 750);    											   // Ảnh nền sẽ phủ lên toàn bộ frame.
 		add(l3);						  											   // Add l3 vào Frame.
 
-        l1 = new JLabel("SELECT WITHDRAWL AMOUNT");
+        l1 = new JLabel("Vui lòng chọn số tiền rút");
         l1.setForeground(Color.WHITE);
         l1.setFont(new Font("System", Font.BOLD, 16));
-        l1.setBounds(180, 250, 300, 30);
+        l1.setBounds(200, 250, 300, 30);
         l3.add(l1);
         
-        b1 = new JButton("Rs 100");
+        b1 = new JButton("500.000");
         b1.setBounds(150, 300, 120, 30);
         l3.add(b1);
         
-        b2 = new JButton("Rs 500");
+        b2 = new JButton("1.000.000");
         b2.setBounds(330, 300, 120, 30);
         l3.add(b2);
         
-        b3 = new JButton("Rs 1000");
+        b3 = new JButton("2.000.000");
         b3.setBounds(150, 340, 120, 30);
         l3.add(b3);
         
-        b4 = new JButton("Rs 2000");
+        b4 = new JButton("3.000.000");
         b4.setBounds(330, 340, 120, 30);
         l3.add(b4);
         
-        b5 = new JButton("Rs 5000");
+        b5 = new JButton("5.000.000");
         b5.setBounds(150, 380, 120, 30);
         l3.add(b5);
         
-        b6 = new JButton("Rs 10000");
+        b6 = new JButton("SỐ KHÁC");
         b6.setBounds(330, 380, 120, 30);
         l3.add(b6);
         
-        b7 = new JButton("BACK");
+        b7 = new JButton("QUAY LẠI");
         b7.setBounds(330, 420, 120, 30);
         l3.add(b7);
 
@@ -77,9 +81,9 @@ public class FastCash extends JFrame implements ActionListener {
     }
 
     // Xử lý sự kiện Btn
-    public void actionPerformed(ActionEvent event) {
+    public void actionPerformed(ActionEvent ae) {
         try {
-            String amount = ((JButton)event.getSource()).getText().substring(3); // Lấy Text trong btn sau khi substring(3): lấy chuỗi từ index 3 -> Cắt chuỗi.
+            String amount = ((JButton)ae.getSource()).getText().replace(".", "");	// Vd: "5.000.000" → "5000000"
             
             Conn c = new Conn();
             
@@ -87,25 +91,30 @@ public class FastCash extends JFrame implements ActionListener {
             
             int balance = 0;	// Số dư
             while (rs.next()) {	// Duyệt qua từng giao dịch để tính số dư (True).
-                if (rs.getString("type").equals("Deposit")) {		// Type = Deposit
+                if (rs.getString("type").equals("Deposit") || rs.getString("type").equals("Transfer In")) {		// Type = Deposit hoặc Transfer In
                     balance += Integer.parseInt(rs.getString("amount"));	// + vào số dư
-                } else {											// Type = Withdrawal
+                } else {													// Type = Withdrawal hoặc Transfer Out
                     balance -= Integer.parseInt(rs.getString("amount"));	// - vào số dư
                 }
             } 
-                  
-            if (event.getSource() != b7 && balance < Integer.parseInt(amount)) {	// Nếu nút bấm khác BACK và số dư < số tiền cần rút
-                JOptionPane.showMessageDialog(null, "Insuffient Balance");
+            
+            if (ae.getSource() == b6) {		// Btn SỐ KHÁC
+            	this.setVisible(false);
+            	new Withdrawal(pin).setVisible(true);
+            }
+            
+            if (ae.getSource() != b7 && balance < Integer.parseInt(amount)) {	// Nếu nút bấm khác "QUAY LẠI" và số dư < số tiền cần rút
+                JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");		
                 return;		// Thoát hàm
             }
 
-            if (event.getSource() == b7) {		// Btn BACK
+            if (ae.getSource() == b7) {		// Btn "QUAY LẠI"
                 this.setVisible(false);
                 new Transactions(pin).setVisible(true);
             }else{
                 Date date = new Date();		// Lưu thời gian giao dịch rút tiền
                 c.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Withdrawl', '"+amount+"')");
-                JOptionPane.showMessageDialog(null, "Rs. "+amount+" Debited Successfully");		// "Rút tiền thành công"
+                JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		
                     
                 setVisible(false);
                 new Transactions(pin).setVisible(true);

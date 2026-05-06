@@ -3,244 +3,326 @@ package ATMSimulationApplication;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+import java.util.*;
 
 public class Signup2 extends JFrame implements ActionListener {
 
-	JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12;
-	JButton b;
-	JRadioButton r1, r2, r3, r4;
-	JTextField t1, t2, t3;
-	JComboBox c1, c2, c3, c4, c5;
-	String formno;  // Lưu số Form -> Liên kết data (formno) giữa các form đăng ký.
-
-	Signup2(String formno) {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14;
+	JRadioButton r1, r2, r3, r4, r5, r6;
+	JButton b1, b2;
+	JCheckBox c1, c2, c3, c4, c5, c6, c7;
+	JTextField t1;
+	
+	String formno;	 // Biến này để lưu trữ số form, được truyền từ Signup1 sang Signup2 để hiển thị và lưu vào database.
+	Signup1 signup1; // Biến này để lưu trữ dữ liệu đã nhập ở Signup1, sau đó có thể sử dụng lại ở Signup2.
+	
+	Signup2 (String formno, Signup1 signup1) {
 		
 		this.formno = formno;
+		this.signup1 = signup1;
 		
-		setTitle("NEW ACCOUNT APPLICATION FORM - PAGE 2");
+		setTitle("NEW ATM ACCOUNT APPLICATION FORM");
 		setLayout(null);
-		
-		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo.jpg"));
-		Image i2 = i1.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT);
-		ImageIcon i3 = new ImageIcon(i2);
-		JLabel label = new JLabel(i3);
-		label.setBounds(150, 0, 100, 100);
-		add(label);
 
-		l1 = new JLabel("Page 2: Additonal Details");
+		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo_bank.png"));  // Tải ảnh từ resource icons/logo_bank.png.
+		Image i2 = i1.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);  	// Lấy ảnh ra và resize thành 100x100.
+		ImageIcon i3 = new ImageIcon(i2); 												// Tạo lại ImageIcon từ ảnh đã resize.
+		JLabel label = new JLabel(i3);													// Đặt icon đó vào JLabel
+		label.setBounds(150, 0, 120, 120);
+		add(label);																		// Đưa label lên cửa sổ.
+
+		l1 = new JLabel("Trang 2: Thông tin tài khoản");
 		l1.setFont(new Font("Raleway", Font.BOLD, 22));
 		l1.setBounds(280, 40, 600, 40);
 		add(l1);
 
-		// Religion
-		l2 = new JLabel("Religion:");
-		l2.setFont(new Font("Raleway", Font.BOLD, 18));
-		l2.setBounds(100, 120, 100, 30);
+		// Account Type
+		l2 = new JLabel("Loại tài khoản:");
+		l2.setFont(new Font("Raleway", Font.BOLD, 18));   // BOLD: chữ đậm
+		l2.setBounds(100, 120, 200, 30);
 		add(l2);
-		
-		String religion[] = { "Hindu", "Muslim", "Sikh", "Christian", "Other" };
-		c1 = new JComboBox(religion);
-		c1.setBackground(Color.WHITE);
-		c1.setFont(new Font("Raleway", Font.BOLD, 14));
-		c1.setBounds(350, 120, 320, 30);
-		add(c1);
-		
-		// Category
-		l3 = new JLabel("Category:");
-		l3.setFont(new Font("Raleway", Font.BOLD, 18));
-		l3.setBounds(100, 170, 100, 30);
-		add(l3);
 
-		String category[] = { "General", "OBC", "SC", "ST", "Other" };
-		c2 = new JComboBox(category);
-		c2.setBackground(Color.WHITE);
-		c2.setFont(new Font("Raleway", Font.BOLD, 14));
-		c2.setBounds(350, 170, 320, 30);
-		add(c2);
-		
-		// Income
-		l4 = new JLabel("Income:");
-		l4.setFont(new Font("Raleway", Font.BOLD, 18));
-		l4.setBounds(100, 220, 100, 30);
-		add(l4);
+		r1 = new JRadioButton("Tài khoản thanh toán (ATM)");
+		r1.setFont(new Font("Raleway", Font.PLAIN, 16));  // PLAIN: chữ bình thường
+		r1.setBackground(Color.WHITE);
+		r1.setBounds(100, 150, 250, 30);
+		add(r1);
 
-		String income[] = { "Null", "<1,50,000", "<2,50,000", "<5,00,000", "Upto 10,00,000", "Above 10,00,000" };
-		c3 = new JComboBox(income);
-		c3.setBackground(Color.WHITE);
-		c3.setFont(new Font("Raleway", Font.BOLD, 14));
-		c3.setBounds(350, 220, 320, 30);
-		add(c3);
-		
-		// Educational Qualification
-		l5 = new JLabel("Educational Qualification: ");
-		l5.setFont(new Font("Raleway", Font.BOLD, 18));
-		l5.setBounds(100, 270, 250, 30);
-		add(l5);
+		r2 = new JRadioButton("Tài khoản tiền gửi có kỳ hạn");
+		r2.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r2.setBackground(Color.WHITE);
+		r2.setBounds(350, 150, 250, 30);
+		add(r2);
 
-		String education[] = { "Non-Graduate", "Graduate", "Post-Graduate", "Doctrate", "Others" };
-		c4 = new JComboBox(education);
-		c4.setBackground(Color.WHITE);
-		c4.setFont(new Font("Raleway", Font.BOLD, 14));
-		c4.setBounds(350, 270, 320, 30);
-		add(c4);
-		
-		// Occupation
-		l6 = new JLabel("Occupation:");
-		l6.setFont(new Font("Raleway", Font.BOLD, 18));
-		l6.setBounds(100, 340, 150, 30);
-		add(l6);
+		r3 = new JRadioButton("Tài khoản tiết kiệm");
+		r3.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r3.setBackground(Color.WHITE);
+		r3.setBounds(100, 180, 250, 30);
+		add(r3);
 
-		String occupation[] = { "Salaried", "Self-Employmed", "Business", "Student", "Retired", "Others" };
-		c5 = new JComboBox(occupation);
-		c5.setBackground(Color.WHITE);
-		c5.setFont(new Font("Raleway", Font.BOLD, 14));
-		c5.setBounds(350, 340, 320, 30);
-		add(c5);
+		r4 = new JRadioButton("Tài khoản tiền gửi định kỳ");
+		r4.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r4.setBackground(Color.WHITE);
+		r4.setBounds(350, 180, 250, 30);
+		add(r4);
+
+		ButtonGroup groupAccType = new ButtonGroup();  // Chỉ cho phép chọn một radio button trong nhóm.
+		groupAccType.add(r1);
+		groupAccType.add(r2);
+		groupAccType.add(r3);
+		groupAccType.add(r4);
 		
-		// PAN Number
-		l7 = new JLabel("PAN Number:");
-		l7.setFont(new Font("Raleway", Font.BOLD, 18));
-		l7.setBounds(100, 390, 150, 30);
-		add(l7);
+		// Loại thẻ
+		l13 = new JLabel("Loại thẻ:");
+		l13.setFont(new Font("Raleway", Font.BOLD, 18));
+		l13.setBounds(100, 220, 200, 30);
+		add(l13);
+		
+		r5 = new JRadioButton("Thẻ nội địa");
+		r5.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r5.setBackground(Color.WHITE);
+		r5.setBounds(100, 250, 250, 30);
+		add(r5);
+
+		r6 = new JRadioButton("Thẻ quốc tế (Visa/MasterCard)");
+		r6.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r6.setBackground(Color.WHITE);
+		r6.setBounds(350, 250, 250, 30);
+		add(r6);
+
+		ButtonGroup groupCardType = new ButtonGroup();
+		groupCardType.add(r5);
+		groupCardType.add(r6);
+
+		// Chi nhánh mở tài khoản ngân hàng
+		l14 = new JLabel("Chi nhánh ngân hàng:");
+		l14.setFont(new Font("Raleway", Font.BOLD, 18));
+		l14.setBounds(100, 290, 250, 30);
+		add(l14);
 		
 		t1 = new JTextField();
 		t1.setFont(new Font("Raleway", Font.BOLD, 14));
-		t1.setBounds(350, 390, 320, 30);
-		t1.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		t1.setBounds(350, 290, 250, 30);
+		t1.setBorder(BorderFactory.createCompoundBorder(
+			    BorderFactory.createLineBorder(Color.GRAY, 1),
+			    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+			)); // Tạo viền màu xám, dày 1 pixel và thêm khoảng cách bên trong (padding) 5 pixel ở trên/dưới và 10 pixel ở trái/phải
 		add(t1);
 		
-		// Aadhar Number
-		l8 = new JLabel("Aadhar Number:");
+		// Card Number
+		l3 = new JLabel("Số thẻ:");
+		l3.setFont(new Font("Raleway", Font.BOLD, 18));
+		l3.setBounds(100, 330, 200, 30);
+		add(l3);
+
+		l4 = new JLabel("XXXX-XXXX-XXXX-4184");
+		l4.setFont(new Font("Raleway", Font.BOLD, 18));
+		l4.setBounds(350, 330, 250, 30);
+		add(l4);
+
+		l5 = new JLabel("(Số thẻ của bạn gồm 16 chữ số)");
+		l5.setFont(new Font("Raleway", Font.ITALIC, 12));   // ITALIC: chữ nghiêng
+		l5.setBounds(100, 350, 200, 20);
+		add(l5);
+
+		l6 = new JLabel("(Thông tin này sẽ hiển thị trên thẻ ATM/sổ séc và sao kê tài khoản)");
+		l6.setFont(new Font("Raleway", Font.ITALIC, 12));
+		l6.setBounds(350, 350, 500, 20);
+		add(l6);
+
+		// PIN
+		l7 = new JLabel("Mã PIN:");
+		l7.setFont(new Font("Raleway", Font.BOLD, 18));
+		l7.setBounds(100, 390, 200, 30);
+		add(l7);
+
+		l8 = new JLabel("XXXX");
 		l8.setFont(new Font("Raleway", Font.BOLD, 18));
-		l8.setBounds(100, 440, 180, 30);
+		l8.setBounds(350, 390, 200, 30);
 		add(l8);
 
-		t2 = new JTextField();
-		t2.setFont(new Font("Raleway", Font.BOLD, 14));
-		t2.setBounds(350, 440, 320, 30);
-		t2.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-		add(t2);
-		
-		// Senior Citizen
-		l9 = new JLabel("Senior Citizen:");
-		l9.setFont(new Font("Raleway", Font.BOLD, 18));
-		l9.setBounds(100, 490, 150, 30);
+		l9 = new JLabel("(Mật khẩu gồm 4 chữ số)");
+		l9.setFont(new Font("Raleway", Font.ITALIC, 12));
+		l9.setBounds(100, 410, 200, 20);
 		add(l9);
 
-		r1 = new JRadioButton("Yes");
-		r1.setFont(new Font("Raleway", Font.BOLD, 14));
-		r1.setBackground(Color.WHITE);
-		r1.setBounds(350, 490, 100, 30);
-		add(r1);
-
-		r2 = new JRadioButton("No");
-		r2.setFont(new Font("Raleway", Font.BOLD, 14));
-		r2.setBackground(Color.WHITE);
-		r2.setBounds(460, 490, 100, 30);
-		add(r2);
-		
-		ButtonGroup group1 = new ButtonGroup(); // ButtonGroup: chỉ được chọn 1 in 2
-		group1.add(r1);
-		group1.add(r2);
-		
-		// Existing Account
-		l10 = new JLabel("Existing Account:");
+		// Services Required (Có thể chọn nhiều dịch vụ cùng lúc)
+		l10 = new JLabel("Dịch vụ yêu cầu:");
 		l10.setFont(new Font("Raleway", Font.BOLD, 18));
-		l10.setBounds(100, 540, 180, 30);
+		l10.setBounds(100, 450, 200, 30);
 		add(l10);
-
-		r3 = new JRadioButton("Yes");
-		r3.setFont(new Font("Raleway", Font.BOLD, 14));
-		r3.setBackground(Color.WHITE);
-		r3.setBounds(350, 540, 100, 30);
-		add(r3);
-
-		r4 = new JRadioButton("No");
-		r4.setFont(new Font("Raleway", Font.BOLD, 14));
-		r4.setBackground(Color.WHITE);
-		r4.setBounds(460, 540, 100, 30);
-		add(r4);
 		
-		ButtonGroup group2 = new ButtonGroup(); // ButtonGroup: chỉ được chọn 1 in 2
-		group2.add(r3);
-		group2.add(r4);
+		c1 = new JCheckBox("Thẻ ATM (ATM Card)");
+		c1.setBackground(Color.WHITE);
+		c1.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c1.setBounds(100, 480, 350, 30);
+		add(c1);
+
+		c2 = new JCheckBox("Sao kê điện tử (E-Statement)");
+		c2.setBackground(Color.WHITE);
+		c2.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c2.setBounds(450, 480, 350, 30);
+		add(c2);
+
+		c3 = new JCheckBox("Ngân hàng di động (Mobile Banking)");
+		c3.setBackground(Color.WHITE);
+		c3.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c3.setBounds(100, 510, 350, 30);
+		add(c3);
+
+		c4 = new JCheckBox("Thông báo qua Email (EMAIL Alerts)");
+		c4.setBackground(Color.WHITE);
+		c4.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c4.setBounds(450, 510, 350, 30);
+		add(c4);
+
+		c5 = new JCheckBox("Ngân hàng trực tuyến (Internet Banking)");
+		c5.setBackground(Color.WHITE);
+		c5.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c5.setBounds(100, 540, 350, 30);
+		add(c5);
+
+		c6 = new JCheckBox("Thông báo qua SMS (SMS Alerts)");
+		c6.setBackground(Color.WHITE);
+		c6.setFont(new Font("Raleway", Font.PLAIN, 16));
+		c6.setBounds(450, 540, 350, 30);
+		add(c6);
+
+		c7 = new JCheckBox("Tôi xác nhận các thông tin đã nhập ở trên là chính xác ", false);    // True -> checkbox này được tick sẵn khi mở form
+		c7.setBackground(Color.WHITE);
+		c7.setFont(new Font("Raleway", Font.BOLD, 12));
+		c7.setBounds(100, 620, 600, 20);
+		add(c7);
 		
 		// Form No
 		l11 = new JLabel("Form No:");
-		l11.setFont(new Font("Raleway", Font.BOLD, 13));
-		l11.setBounds(650, 10, 60, 30);
+		l11.setFont(new Font("Raleway", Font.BOLD, 14));
+		l11.setBounds(650, 10, 70, 30);
 		add(l11);
 		
 		l12 = new JLabel(formno);
-		l12.setFont(new Font("Raleway", Font.BOLD, 13));
-		l12.setBounds(720, 10, 60, 30);
+		l12.setFont(new Font("Raleway", Font.BOLD, 14));
+		l12.setBounds(720, 10, 40, 30);
 		add(l12);
 
-		// Btn Next
-		b = new JButton("Next");
-		b.setFont(new Font("Raleway", Font.BOLD, 14));
-		b.setBackground(Color.BLACK);
-		b.setForeground(Color.WHITE);
-		b.setBounds(570, 640, 100, 30);
-		add(b);
+		// Btn Hoàn thành
+		b1 = new JButton("Hoàn thành");
+		b1.setFont(new Font("Raleway", Font.BOLD, 14));
+		b1.setBackground(Color.BLACK);
+		b1.setForeground(Color.WHITE);
+		b1.setBounds(600, 660, 120, 30);
+		add(b1);
 
-		b.addActionListener(this);  // Đăng ký listener cho btn.
+		// Btn Quay lại
+		b2 = new JButton("Quay lại");
+		b2.setFont(new Font("Raleway", Font.BOLD, 14));
+		b2.setBackground(Color.BLACK);
+		b2.setForeground(Color.WHITE);
+		b2.setBounds(420, 660, 120, 30);
+		add(b2);
+
+		// Đăng ký listener cho btn.
+		b1.addActionListener(this);
+		b2.addActionListener(this);
 
 		getContentPane().setBackground(Color.WHITE);
 		setSize(800, 750);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null);    // Cửa sổ giữa màn hình
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 
-	public void actionPerformed(ActionEvent event) {
-		String religion = (String) c1.getSelectedItem();  // getSelectedItem(): lấy giá trị đang chọn trong combobox
-		String category = (String) c2.getSelectedItem();
-		String income = (String) c3.getSelectedItem();
-		String education = (String) c4.getSelectedItem();
-		String occupation = (String) c5.getSelectedItem();
-
-		String pan = t1.getText();
-		String aadhar = t2.getText();
-
-		String scitizen = "";
-		if (r1.isSelected()) {           // .isSelected() → kiểm tra r1 có được chọn không
-			scitizen = "Yes";
+	// Hàm xử lý sự kiện btn.
+	public void actionPerformed(ActionEvent ae) {
+		String atype = null;
+		if (r1.isSelected()) {        	// .isSelected() → kiểm tra r... có được chọn không
+			atype = "Tài khoản thanh toán (ATM)";
 		} else if (r2.isSelected()) {
-			scitizen = "No";
+			atype = "Tài khoản tiền gửi có kỳ hạn";
+		} else if (r3.isSelected()) {
+			atype = "Tài khoản tiết kiệm";
+		} else if (r4.isSelected()) {
+			atype = "Tài khoản tiền gửi định kỳ";
 		}
 
-		String eaccount = "";
-		if (r3.isSelected()) {
-			eaccount = "Yes";
-		} else if (r4.isSelected()) {
-			eaccount = "No";
+		String ctype = null;
+		if (r5.isSelected()) {
+			ctype = "Thẻ nội địa";
+		} else if (r6.isSelected()) {
+			ctype = "Thẻ quốc tế (Visa/MasterCard)";
+		}
+		
+		String bankBranch = t1.getText();
+		
+		// Tạo số thẻ ATM random.
+		Random ran = new Random();
+		long first7 = (ran.nextLong() % 90000000L) + 5040936000000000L;
+		String cardno = "" + Math.abs(first7);
+
+		// Tạo PIN random
+		long first3 = (ran.nextLong() % 9000L) + 1000L;
+		String pin = "" + Math.abs(first3);
+
+		String facility = "";   // Gom các dịch vụ đã chọn
+		if (c1.isSelected()) {
+			facility = facility + " Thẻ ATM (ATM Card)";
+		}
+		if (c2.isSelected()) {
+			facility = facility + " Sao kê điện tử (E-Statement)";
+		}
+		if (c3.isSelected()) {
+			facility = facility + " Ngân hàng di động (Mobile Banking)";
+		}
+		if (c4.isSelected()) {
+			facility = facility + " Thông báo qua Email (EMAIL Alerts)";
+		}
+		if (c5.isSelected()) {
+			facility = facility + " Ngân hàng trực tuyến (Internet Banking)";
+		}
+		if (c6.isSelected()) {
+			facility = facility + " Thông báo qua SMS (SMS Alerts)";
 		}
 
 		try {
-			if (t2.getText().equals("")) {     // Nếu Aadhar trống → báo lỗi
-				JOptionPane.showMessageDialog(null, "Fill all the required fields");
-			} else {
-				Conn c1 = new Conn();
-				
-				// Tạo cmd query thêm dữ liệu vào DB
-				String q1 = "insert into signup2 values('" + formno + "','" + religion + "','" + category + "','"
-						+ income + "','" + education + "','" + occupation + "','" + pan + "','" + aadhar + "','"
-						+ scitizen + "','" + eaccount + "')";
-				
-				c1.s.executeUpdate(q1);  // Chạy cmd INSERT
+			if (ae.getSource() == b1) {    // Btn Hoàn Thành
 
-				new Signup3(formno).setVisible(true);  // Nhấn Next mở Signup3
+				if (atype == null || ctype == null || bankBranch.equals("") || facility.equals("") || !c7.isSelected()) {   // Kiểm tra nếu chưa chọn loại tài khoản, loại thẻ, chi nhánh ngân hàng, dịch vụ yêu cầu hoặc chưa tick vào checkbox xác nhận.
+				    JOptionPane.showMessageDialog(null, "Hãy điền đầy đủ thông tin!");
+				    return;
+				} else {
+					Conn c1 = new Conn();
+					
+					String q1 = "insert into signup2 values('" + formno + "','" + atype + "','" + ctype + "','" + bankBranch + "','" + cardno + "','" + pin + "','" + facility + "')";
+					
+					String q2 = "insert into login values('" + formno + "','" + cardno + "','" + pin + "')";
+					
+					c1.s.executeUpdate(q1);
+					c1.s.executeUpdate(q2);
+					
+					JOptionPane.showMessageDialog(null, "Card Number: " + cardno + "\n Pin:" + pin);
+					
+					setVisible(false);
+					new Login().setVisible(true);
+				}
+
+			} else if (ae.getSource() == b2) {    // Btn Quay lại
 				setVisible(false);
+				signup1.setVisible(true);
 			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+
 	}
 
 	public static void main(String[] args) {
-		new Signup2("");
+		new Signup2("", new Signup1());
 	}
+
 }

@@ -4,10 +4,17 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
 import javax.swing.*;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 class BalanceEnquiry extends JFrame implements ActionListener {
 
-    JButton b1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	JButton b1;
     JLabel l1;
     String pin;
 
@@ -33,7 +40,7 @@ class BalanceEnquiry extends JFrame implements ActionListener {
         l2.add(l1);
         
         // Btn BACK
-        b1 = new JButton("BACK");
+        b1 = new JButton("QUAY LẠI");
         b1.setBounds(310, 420, 140, 30);
         l2.add(b1);
 
@@ -45,9 +52,9 @@ class BalanceEnquiry extends JFrame implements ActionListener {
             ResultSet rs = c1.s.executeQuery("select * from bank where pin = '"+pin+"'");	// Truy vấn tất cả giao dịch bank của tài khoản có pin tương ứng
             
             while (rs.next()) {		// True
-                if (rs.getString("type").equals("Deposit")) {				// Type = deposit
+                if (rs.getString("type").equals("Deposit") || rs.getString("type").equals("Transfer In")) {		// Type = deposit hoặc Transfer In
                     balance += Integer.parseInt(rs.getString("amount"));	// + vào số dư
-                } else {													// Type = Withdrawal
+                } else {													// Type = Withdrawal hoặc Transfer Out
                     balance -= Integer.parseInt(rs.getString("amount"));	// - vào số dư
                 }	
             }
@@ -56,7 +63,10 @@ class BalanceEnquiry extends JFrame implements ActionListener {
         }
         
         // Hiển thị số dư lên label
-        l1.setText("Your Current Account Balance is Rs " + balance);
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));	// Dùng NumberFormat để format số có dấu chấm.
+        String formattedBalance = formatter.format(balance);
+
+        l1.setText("Số dư tài khoản: " + formattedBalance + " VND");
 
         // Đăng ký sự kiện cho btn
         b1.addActionListener(this);

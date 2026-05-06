@@ -6,6 +6,11 @@ import javax.swing.*;
 import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	JLabel l1, l2, l3;
 	JTextField tf1;
 	JPasswordField pf2;
@@ -15,61 +20,77 @@ public class Login extends JFrame implements ActionListener {
 		setTitle("ATM Login");
 		setLayout(null); // Set components thủ công setBounds(...)
 
-		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo.jpg"));  // ClassLoader.getSystemResource(...): dùng để lấy file tài nguyên trong project
-		Image i2 = i1.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT); 		// Lấy ảnh gốc ra dưới dạng Image, sau đó Resize lại 100x100 pixel
+		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo_bank.png"));  // ClassLoader.getSystemResource(...): dùng để lấy file tài nguyên trong project
+		Image i2 = i1.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); 		// Lấy ảnh gốc ra dưới dạng Image, sau đó Resize lại 100x100 pixel
 		ImageIcon i3 = new ImageIcon(i2);  // Chuyển ảnh đã resize lại thành ImageIcon
-		JLabel label = new JLabel(i3);     // Tạo 1 JLabel chứa i3
-		label.setBounds(70, 10, 100, 100); // Set i3 ở tọa độ (70, 10) với kích thước 100x100
-		add(label); 					   // Add Label vào JFrame.
+		JLabel image = new JLabel(i3);     // Tạo 1 JLabel chứa i3
+		image.setBounds(120, 10, 120, 120); // Set i3 ở tọa độ (70, 10) với kích thước 100x100
+		add(image); 					   // Add Label vào JFrame.
 
-		l1 = new JLabel("WELCOME TO ATM");
+        ImageIcon ii1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo_card.png"));
+        Image ii2 = ii1.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH);
+        ImageIcon ii3 = new ImageIcon(ii2);
+        JLabel iimage = new JLabel(ii3);
+        iimage.setBounds(600,300,100,100);
+        add(iimage);
+		
+		l1 = new JLabel("BLACK BANK ATM");
 		l1.setFont(new Font("Arial", Font.BOLD, 38));
-		l1.setBounds(200, 50, 450, 40);
+		l1.setForeground(Color.WHITE);
+		l1.setBounds(240, 50, 450, 40);
 		add(l1);
 
 		// Card No
-		l2 = new JLabel("Card No:");
-		l2.setFont(new Font("Arial", Font.BOLD, 28));
-		l2.setBounds(125, 150, 375, 30);
+		l2 = new JLabel("SỐ THẺ:");
+		l2.setFont(new Font("Arial", Font.BOLD, 20));
+		l2.setForeground(Color.WHITE);
+		l2.setBounds(200, 150, 375, 30);
 		add(l2);
 
 		tf1 = new JTextField(15);
 		tf1.setBounds(300, 150, 230, 30);
 		tf1.setFont(new Font("Arial", Font.BOLD, 14));
-		tf1.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // tạo viền màu xám, dày 1 pixel
+		tf1.setBorder(BorderFactory.createCompoundBorder(
+			    BorderFactory.createLineBorder(Color.GRAY, 1),
+			    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+			)); // Tạo viền màu xám, dày 1 pixel và thêm khoảng cách bên trong (padding) 5 pixel ở trên/dưới và 10 pixel ở trái/phải
 		add(tf1);
 
 		// PIN
-		l3 = new JLabel("PIN:");
-		l3.setFont(new Font("Arial", Font.BOLD, 28));
-		l3.setBounds(125, 220, 375, 30);
+		l3 = new JLabel("MÃ PIN:");
+		l3.setFont(new Font("Arial", Font.BOLD, 20));
+		l3.setForeground(Color.WHITE);
+		l3.setBounds(200, 200, 375, 30);
 		add(l3);
 
 		pf2 = new JPasswordField(15);
 		pf2.setFont(new Font("Arial", Font.BOLD, 14));
-		pf2.setBounds(300, 220, 230, 30);
-		pf2.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		pf2.setBounds(300, 200, 230, 30);
+		pf2.setBorder(BorderFactory.createCompoundBorder(
+			    BorderFactory.createLineBorder(Color.GRAY, 1),
+			    BorderFactory.createEmptyBorder(5, 10, 5, 10)
+			)); 
 		add(pf2);
 
-		b1 = new JButton("SIGN IN");
+		b1 = new JButton("Đăng nhập");
 		b1.setBackground(Color.BLACK); // Nền đen
 		b1.setForeground(Color.WHITE); // Chữ trắng
 		b1.setFont(new Font("Arial", Font.BOLD, 14));
-		b1.setBounds(300, 300, 100, 30);
+		b1.setBounds(300, 280, 110, 30);
 		add(b1);
 
-		b2 = new JButton("CLEAR");
+		b2 = new JButton("Xóa");
 		b2.setBackground(Color.BLACK);
 		b2.setForeground(Color.WHITE);
 		b2.setFont(new Font("Arial", Font.BOLD, 14));
-		b2.setBounds(430, 300, 100, 30);
+		b2.setBounds(470, 240, 60, 30);
 		add(b2);
 
-		b3 = new JButton("SIGN UP");
+		b3 = new JButton("Đăng ký");
 		b3.setBackground(Color.BLACK);
 		b3.setForeground(Color.WHITE);
 		b3.setFont(new Font("Arial", Font.BOLD, 14));
-		b3.setBounds(300, 350, 230, 30);
+		b3.setBounds(420, 280, 110, 30);
 		add(b3);
 
 		// Đăng ký listener cho các button.
@@ -77,8 +98,15 @@ public class Login extends JFrame implements ActionListener {
 		b2.addActionListener(this);
 		b3.addActionListener(this);
 
+        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
+        Image iii2 = iii1.getImage().getScaledInstance(800,500,Image.SCALE_SMOOTH);  // SCALE_SMOOTH:giữ nguyên chất lượng ảnh khi resize.
+        ImageIcon iii3 = new ImageIcon(iii2);
+        JLabel iiimage = new JLabel(iii3);
+        iiimage.setBounds(0,0,800,500);
+        add(iiimage);
+		
 		getContentPane().setBackground(Color.WHITE); // Set màu nền của JFrame (Login)
-		setSize(750, 450);
+		setSize(800, 500);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -94,7 +122,7 @@ public class Login extends JFrame implements ActionListener {
 				Conn c1 = new Conn();
 
 				// Query kiểm tra cardno, pin của login có trùng với cardno, pin của Login
-				String query = "select * from login where cardno = '" + cardno + "' and pin = '" + pin + "'";
+				String query = "select * from login where SOTHE = '" + cardno + "' and MA_PIN = '" + pin + "'";
 
 				ResultSet rs = c1.s.executeQuery(query); // Chạy query SELECT -> Lưu kq trong rs
 
@@ -102,7 +130,7 @@ public class Login extends JFrame implements ActionListener {
 					setVisible(false);
 					new Transactions(pin).setVisible(true);
 				} else {
-					JOptionPane.showMessageDialog(null, "Incorrect Card No or PIN");
+					JOptionPane.showMessageDialog(null, "Số thẻ hoặc mã PIN không đúng!");
 				}
 
 			} else if (event.getSource() == b2) { // CLEAR
