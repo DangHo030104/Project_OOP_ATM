@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StatisticsPanel extends JPanel implements ActionListener {
+public class systemStatisticsPanel extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,7 @@ public class StatisticsPanel extends JPanel implements ActionListener {
     JButton refreshButton, backButton;
     JLabel updateTimeLabel;
     
-    StatisticsPanel() {
+    systemStatisticsPanel() {
         setLayout(null);
         setBackground(Color.WHITE);
 
@@ -175,8 +175,8 @@ public class StatisticsPanel extends JPanel implements ActionListener {
         titleLabel.setForeground(color);
 
         // ===== VALUE =====
-        valueLabel.setBounds(20, 50, 240, 35);
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        valueLabel.setBounds(55, 50, 240, 35);
+        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         valueLabel.setForeground(color);
 
         panel.add(iconLabel);

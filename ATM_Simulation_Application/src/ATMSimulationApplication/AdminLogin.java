@@ -12,7 +12,7 @@ public class AdminLogin extends JFrame implements ActionListener {
     JLabel titleLabel, usernameLabel, passwordLabel;
     JTextField usernameField;
     JPasswordField passwordField;
-    JButton loginButton, backButton;
+    JButton loginButton, atmButton;
 
     AdminLogin() {
         setTitle("Admin Login");
@@ -61,22 +61,22 @@ public class AdminLogin extends JFrame implements ActionListener {
 		)); 
         add(passwordField);
 
-        loginButton = new JButton("ĐĂNG NHẬP");
+        loginButton = new JButton("Đăng nhập");
         loginButton.setBackground(Color.BLACK);
         loginButton.setForeground(Color.WHITE);
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
-        loginButton.setBounds(300, 250, 120, 35);
+        loginButton.setBounds(300, 230, 250, 30);
         add(loginButton);
 
-        backButton = new JButton("QUAY LẠI");
-        backButton.setBackground(Color.BLACK);
-        backButton.setForeground(Color.WHITE);
-        backButton.setFont(new Font("Arial", Font.BOLD, 14));
-        backButton.setBounds(430, 250, 120, 35);
-        add(backButton);
+        atmButton = new JButton("ATM Login");
+        atmButton.setBackground(new Color(31, 41, 55));
+        atmButton.setForeground(Color.WHITE);
+        atmButton.setFont(new Font("Arial", Font.BOLD, 14));
+        atmButton.setBounds(550, 310, 120, 35);
+        add(atmButton);
 
         loginButton.addActionListener(this);
-        backButton.addActionListener(this);
+        atmButton.addActionListener(this);
 
         ImageIcon ii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
         Image ii2 = ii1.getImage().getScaledInstance(700,400,Image.SCALE_SMOOTH);  // SCALE_SMOOTH:giữ nguyên chất lượng ảnh khi resize.
@@ -94,9 +94,9 @@ public class AdminLogin extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         try {
-            if (ae.getSource() == backButton) {
+            if (ae.getSource() == atmButton) {
                 setVisible(false);
-                new Login().setVisible(true);
+                new ATMLogin().setVisible(true);
                 return;
             }
 

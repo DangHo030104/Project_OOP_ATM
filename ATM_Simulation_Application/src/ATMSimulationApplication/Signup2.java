@@ -13,7 +13,7 @@ public class Signup2 extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	JLabel l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14;
-	JRadioButton r1, r2, r3, r4, r5, r6;
+	JRadioButton r1, r2, r3, r4;
 	JButton b1, b2;
 	JCheckBox c1, c2, c3, c4, c5, c6, c7;
 	JTextField t1;
@@ -44,38 +44,24 @@ public class Signup2 extends JFrame implements ActionListener {
 		// Account Type
 		l2 = new JLabel("Loại tài khoản:");
 		l2.setFont(new Font("Raleway", Font.BOLD, 18));   // BOLD: chữ đậm
-		l2.setBounds(100, 120, 200, 30);
+		l2.setBounds(100, 150, 200, 30);
 		add(l2);
 
 		r1 = new JRadioButton("Tài khoản thanh toán (ATM)");
 		r1.setFont(new Font("Raleway", Font.PLAIN, 16));  // PLAIN: chữ bình thường
 		r1.setBackground(Color.WHITE);
-		r1.setBounds(100, 150, 250, 30);
+		r1.setBounds(100, 180, 250, 30);
 		add(r1);
 
-		r2 = new JRadioButton("Tài khoản tiền gửi có kỳ hạn");
+		r2 = new JRadioButton("Tài khoản tiết kiệm");
 		r2.setFont(new Font("Raleway", Font.PLAIN, 16));
 		r2.setBackground(Color.WHITE);
-		r2.setBounds(350, 150, 250, 30);
+		r2.setBounds(350, 180, 250, 30);
 		add(r2);
-
-		r3 = new JRadioButton("Tài khoản tiết kiệm");
-		r3.setFont(new Font("Raleway", Font.PLAIN, 16));
-		r3.setBackground(Color.WHITE);
-		r3.setBounds(100, 180, 250, 30);
-		add(r3);
-
-		r4 = new JRadioButton("Tài khoản tiền gửi định kỳ");
-		r4.setFont(new Font("Raleway", Font.PLAIN, 16));
-		r4.setBackground(Color.WHITE);
-		r4.setBounds(350, 180, 250, 30);
-		add(r4);
 
 		ButtonGroup groupAccType = new ButtonGroup();  // Chỉ cho phép chọn một radio button trong nhóm.
 		groupAccType.add(r1);
 		groupAccType.add(r2);
-		groupAccType.add(r3);
-		groupAccType.add(r4);
 		
 		// Loại thẻ
 		l13 = new JLabel("Loại thẻ:");
@@ -83,21 +69,21 @@ public class Signup2 extends JFrame implements ActionListener {
 		l13.setBounds(100, 220, 200, 30);
 		add(l13);
 		
-		r5 = new JRadioButton("Thẻ nội địa");
-		r5.setFont(new Font("Raleway", Font.PLAIN, 16));
-		r5.setBackground(Color.WHITE);
-		r5.setBounds(100, 250, 250, 30);
-		add(r5);
+		r3 = new JRadioButton("Thẻ nội địa");
+		r3.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r3.setBackground(Color.WHITE);
+		r3.setBounds(100, 250, 250, 30);
+		add(r3);
 
-		r6 = new JRadioButton("Thẻ quốc tế (Visa/MasterCard)");
-		r6.setFont(new Font("Raleway", Font.PLAIN, 16));
-		r6.setBackground(Color.WHITE);
-		r6.setBounds(350, 250, 250, 30);
-		add(r6);
+		r4 = new JRadioButton("Thẻ quốc tế (Visa/MasterCard)");
+		r4.setFont(new Font("Raleway", Font.PLAIN, 16));
+		r4.setBackground(Color.WHITE);
+		r4.setBounds(350, 250, 250, 30);
+		add(r4);
 
 		ButtonGroup groupCardType = new ButtonGroup();
-		groupCardType.add(r5);
-		groupCardType.add(r6);
+		groupCardType.add(r3);
+		groupCardType.add(r4);
 
 		// Chi nhánh mở tài khoản ngân hàng
 		l14 = new JLabel("Chi nhánh ngân hàng:");
@@ -243,17 +229,13 @@ public class Signup2 extends JFrame implements ActionListener {
 		if (r1.isSelected()) {        	// .isSelected() → kiểm tra r... có được chọn không
 			atype = "Tài khoản thanh toán (ATM)";
 		} else if (r2.isSelected()) {
-			atype = "Tài khoản tiền gửi có kỳ hạn";
-		} else if (r3.isSelected()) {
 			atype = "Tài khoản tiết kiệm";
-		} else if (r4.isSelected()) {
-			atype = "Tài khoản tiền gửi định kỳ";
 		}
 
 		String ctype = null;
-		if (r5.isSelected()) {
+		if (r3.isSelected()) {
 			ctype = "Thẻ nội địa";
-		} else if (r6.isSelected()) {
+		} else if (r4.isSelected()) {
 			ctype = "Thẻ quốc tế (Visa/MasterCard)";
 		}
 		

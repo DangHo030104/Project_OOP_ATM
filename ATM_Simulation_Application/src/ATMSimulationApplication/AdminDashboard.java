@@ -11,7 +11,7 @@ public class AdminDashboard extends JFrame implements ActionListener {
     JMenuBar menuBar;											// Thanh Menu chính ở trên cùng
     JMenu manageMenu, statisticMenu, systemMenu;				// Menu cha
     JMenuItem accountItem, transactionItem;						// Menu con của "Quản lý"
-    JMenuItem systemStatisticItem;								// Menu con của "Thống kê"
+    JMenuItem systemStatisticItem, customerStatisticItem;		// Menu con của "Thống kê"
     JMenuItem logoutItem, exitItem;								// Menu con của "Hệ thống"	
 
     JLabel title, welcome, note;
@@ -27,7 +27,8 @@ public class AdminDashboard extends JFrame implements ActionListener {
         // ===== MENU BAR =====
         menuBar = new JMenuBar();	
         menuBar.setBackground(Color.LIGHT_GRAY);
-                
+        menuBar.setPreferredSize(new Dimension(0, 30));
+        
         manageMenu = new JMenu("Quản lý");
         statisticMenu = new JMenu("Thống kê");
         systemMenu = new JMenu("Hệ thống");
@@ -36,16 +37,18 @@ public class AdminDashboard extends JFrame implements ActionListener {
         transactionItem = new JMenuItem("Quản lý giao dịch");
 
         systemStatisticItem = new JMenuItem("Thống kê hệ thống");
-
+        customerStatisticItem = new JMenuItem("Thống kê khách hàng");
+        
         logoutItem = new JMenuItem("Đăng xuất");
-        exitItem = new JMenuItem("Thoát chương trình");
+        exitItem = new JMenuItem("Thoát hệ thống");
 
         /* Add menu con vào menu cha */
         manageMenu.add(accountItem);
         manageMenu.add(transactionItem);
 
         statisticMenu.add(systemStatisticItem);
-
+        statisticMenu.add(customerStatisticItem);
+        
         systemMenu.add(logoutItem);
         systemMenu.add(exitItem);
 
@@ -63,7 +66,8 @@ public class AdminDashboard extends JFrame implements ActionListener {
         contentPanel.add(HomePanel(), "HOME");	
         contentPanel.add(new AccountManagementPanel(), "ACCOUNT");
         contentPanel.add(new TransactionManagementPanel(), "TRANSACTION");
-        contentPanel.add(new StatisticsPanel(), "STATISTICS");
+        contentPanel.add(new systemStatisticsPanel(), "SYSTEM_STATISTICS");
+        contentPanel.add(new CustomerStatisticsPanel(), "CUSTOMER_STATISTICS");
 
         add(contentPanel, BorderLayout.CENTER);
         
@@ -73,6 +77,7 @@ public class AdminDashboard extends JFrame implements ActionListener {
         accountItem.addActionListener(this);
         transactionItem.addActionListener(this);
         systemStatisticItem.addActionListener(this);
+        customerStatisticItem.addActionListener(this);
         logoutItem.addActionListener(this);
         exitItem.addActionListener(this);
         
@@ -132,8 +137,11 @@ public class AdminDashboard extends JFrame implements ActionListener {
             cardLayout.show(contentPanel, "TRANSACTION");
 
         } else if (ae.getSource() == systemStatisticItem) {
-        	cardLayout.show(contentPanel, "STATISTICS");
+        	cardLayout.show(contentPanel, "SYSTEM_STATISTICS");
 
+        } else if (ae.getSource() == customerStatisticItem) {
+            cardLayout.show(contentPanel, "CUSTOMER_STATISTICS");
+            
         } else if (ae.getSource() == logoutItem) {
             int confirm = JOptionPane.showConfirmDialog(
                     null,
@@ -150,7 +158,7 @@ public class AdminDashboard extends JFrame implements ActionListener {
         } else if (ae.getSource() == exitItem) {
             int confirm = JOptionPane.showConfirmDialog(
                     null,
-                    "Bạn có chắc chắn muốn thoát chương trình không?",
+                    "Bạn có chắc muốn thoát?",
                     "Xác nhận thoát",
                     JOptionPane.YES_NO_OPTION
             );

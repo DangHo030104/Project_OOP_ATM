@@ -225,8 +225,8 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         titleLabel.setForeground(color);
 
         // ===== VALUE =====
-        valueLabel.setBounds(20,45,250,35);
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        valueLabel.setBounds(55,45,250,35);
+        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         valueLabel.setForeground(color);
 
         panel.add(iconLabel);

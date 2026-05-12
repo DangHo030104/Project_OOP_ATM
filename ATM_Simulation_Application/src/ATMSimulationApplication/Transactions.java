@@ -114,7 +114,7 @@ public class Transactions extends JFrame implements ActionListener {
 			
 		} else if (e.getSource() == b7) {       // Btn THOÁT
 			this.setVisible(false);
-			new Login().setVisible(true);
+			new ATMLogin().setVisible(true);
 		}
 	}
 

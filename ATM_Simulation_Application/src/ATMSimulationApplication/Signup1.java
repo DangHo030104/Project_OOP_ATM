@@ -77,6 +77,7 @@ public class Signup1 extends JFrame implements ActionListener {
 			    BorderFactory.createLineBorder(Color.GRAY, 1),
 			    BorderFactory.createEmptyBorder(5, 10, 5, 10)
 			)); // Tạo viền màu xám, dày 1 pixel và thêm khoảng cách bên trong (padding) 5 pixel ở trên/dưới và 10 pixel ở trái/phải
+		dateChooser.setDateFormatString("dd/MM/yyyy");
 		add(dateChooser);
 
 		// Giới tính

@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
 
-public class Login extends JFrame implements ActionListener {
+public class ATMLogin extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
@@ -14,9 +14,9 @@ public class Login extends JFrame implements ActionListener {
 	JLabel l1, l2, l3;
 	JTextField tf1;
 	JPasswordField pf2;
-	JButton b1, b2;
+	JButton b1, b2, adminBtn;
 
-	Login() {
+	ATMLogin() {
 		setTitle("ATM Login");
 		setLayout(null); // Set components thủ công setBounds(...)
 
@@ -76,7 +76,7 @@ public class Login extends JFrame implements ActionListener {
 		b1.setBackground(Color.BLACK); // Nền đen
 		b1.setForeground(Color.WHITE); // Chữ trắng
 		b1.setFont(new Font("Arial", Font.BOLD, 14));
-		b1.setBounds(420, 280, 110, 30);
+		b1.setBounds(300, 280, 230, 30);
 		add(b1);
 
 		b2 = new JButton("Xóa");
@@ -86,9 +86,19 @@ public class Login extends JFrame implements ActionListener {
 		b2.setBounds(470, 240, 60, 30);
 		add(b2);
 
+		adminBtn = new JButton("Admin Login");
+		adminBtn.setBounds(620, 410, 140, 30);
+		adminBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		adminBtn.setBackground(new Color(31, 41, 55));
+		adminBtn.setForeground(Color.WHITE);
+		adminBtn.setFocusPainted(false);
+		adminBtn.setBorderPainted(false);
+		add(adminBtn);
+		
 		// Đăng ký listener cho các button.
 		b1.addActionListener(this); // this -> Login
 		b2.addActionListener(this);
+		adminBtn.addActionListener(this);
 
         ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
         Image iii2 = iii1.getImage().getScaledInstance(800,500,Image.SCALE_SMOOTH);  // SCALE_SMOOTH:giữ nguyên chất lượng ảnh khi resize.
@@ -129,13 +139,16 @@ public class Login extends JFrame implements ActionListener {
 				tf1.setText("");
 				pf2.setText("");
 				
-			} 
+			} else if (event.getSource() == adminBtn) { // ADMIN LOGIN
+				setVisible(false);
+				new AdminLogin().setVisible(true);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void main(String[] args) {
-		new Login();
+		new ATMLogin();
 	}
 }
