@@ -18,7 +18,7 @@ public class AdminLogin extends JFrame implements ActionListener {
         setTitle("Admin Login");
         setLayout(null);
 
-		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo_admin2.png"));  // ClassLoader.getSystemResource(...): dùng để lấy file tài nguyên trong project
+		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/logo_admin.png"));  // ClassLoader.getSystemResource(...): dùng để lấy file tài nguyên trong project
 		Image i2 = i1.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); 		// Lấy ảnh gốc ra dưới dạng Image, sau đó Resize lại 100x100 pixel
 		ImageIcon i3 = new ImageIcon(i2);  // Chuyển ảnh đã resize lại thành ImageIcon
 		JLabel image = new JLabel(i3);     // Tạo 1 JLabel chứa i3

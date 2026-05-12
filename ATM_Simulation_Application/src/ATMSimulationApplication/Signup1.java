@@ -238,7 +238,12 @@ public class Signup1 extends JFrame implements ActionListener {
 		String formno = first;
 		String name = t1.getText();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		String dob = sdf.format(dateChooser.getDate());
+		String dob = "";
+		if (dateChooser.getDate() == null) {
+		    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày sinh!");
+		    return;
+		}
+		dob = sdf.format(dateChooser.getDate());
 		
 		String gender = null;	
 		if (r1.isSelected()) { // .isSelected() → kiểm tra r1 có được chọn không

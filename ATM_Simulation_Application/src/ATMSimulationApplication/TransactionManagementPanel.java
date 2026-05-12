@@ -24,7 +24,7 @@ public class TransactionManagementPanel extends JPanel implements ActionListener
 
         titleLabel = new JLabel("QUẢN LÝ GIAO DỊCH", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setForeground(new Color(31, 78, 121));
         titleLabel.setBounds(0, 20, 1200, 40);
         add(titleLabel);
 
@@ -117,7 +117,7 @@ public class TransactionManagementPanel extends JPanel implements ActionListener
             }
 
 //            query += "ORDER BY b.NGAYGD DESC";	// Sắp xếp giao dịch mới nhất lên trên
-            query += "ORDER BY b.NGAYGD DESC";
+            query += "ORDER BY b.NGAYGD";
             
             ResultSet rs = c.s.executeQuery(query);
 

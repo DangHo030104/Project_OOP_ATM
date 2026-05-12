@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class AccountManagementPanel extends JPanel implements ActionListener {
 
@@ -22,7 +24,7 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         
         titleLabel = new JLabel("QUẢN LÝ TÀI KHOẢN", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setForeground(new Color(31, 78, 121));
         titleLabel.setBounds(0, 20, 1200, 40);
         add(titleLabel);
 
@@ -46,36 +48,33 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         searchButton.setBackground(new Color(0,122,204));
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
         ImageIcon searchIcon = new ImageIcon(ClassLoader.getSystemResource("icons/search.png"));
         Image i1 = searchIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         searchButton.setIcon(new ImageIcon(i1));
         add(searchButton);
         
         addButton = new JButton("+ Thêm TK");
-        addButton.setBounds(540, 80, 130, 30);
+        addButton.setBounds(695, 80, 130, 30);
         addButton.setBackground(new Color(40,167,69));
         addButton.setForeground(Color.WHITE);
         addButton.setFont(new Font("Arial", Font.BOLD, 14));
         add(addButton);
 
         editButton = new JButton("Sửa TK");
-        editButton.setBounds(700, 80, 130, 30);
+        editButton.setBounds(855, 80, 130, 30);
         editButton.setBackground(new Color(255,153,0));
         editButton.setForeground(Color.WHITE);
         editButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
         ImageIcon editIcon = new ImageIcon(ClassLoader.getSystemResource("icons/edit.png"));
         Image i2 = editIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         editButton.setIcon(new ImageIcon(i2));
         add(editButton);
 
         deleteButton = new JButton("Xóa TK");
-        deleteButton.setBounds(870, 80, 130, 30);
+        deleteButton.setBounds(1015, 80, 130, 30);
         deleteButton.setBackground(new Color(220,53,69));
         deleteButton.setForeground(Color.WHITE);
         deleteButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
         ImageIcon deleteIcon = new ImageIcon(ClassLoader.getSystemResource("icons/delete.png"));
         Image i3 = deleteIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         deleteButton.setIcon(new ImageIcon(i3));
@@ -86,7 +85,6 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         refreshButton.setBackground(new Color(0,122,204));
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFont(new Font("Arial", Font.BOLD, 14));
-        
         ImageIcon refreshIcon = new ImageIcon(ClassLoader.getSystemResource("icons/refresh.png"));
         Image i4 = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         refreshButton.setIcon(new ImageIcon(i4));
@@ -112,7 +110,7 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         table.setFont(new Font("Arial", Font.PLAIN, 12));
         table.setRowHeight(26);
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 13));
-        table.getTableHeader().setBackground(new Color(0,102,204));
+        table.getTableHeader().setBackground(new Color(0,102,204)); 
         table.getTableHeader().setForeground(Color.WHITE);
         
         table.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -128,69 +126,64 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         scrollPane.setBounds(45, 280, 1100, 250);
         add(scrollPane);
         
+        /* Phần thống kê nhanh */
+        totalAccountLabel = new JLabel("0");
         JPanel totalAccCard = createStatCard(
                 "Tổng tài khoản",
-                "5,256",
-                new Color(0,102,204)
+                totalAccountLabel,
+                new Color(0,102,204),
+                "icons/user.png"
         );
-
         totalAccCard.setBounds(45,130,250,90);
         add(totalAccCard);
         
+        totalTransactionLabel = new JLabel("0");
         JPanel transactionCard = createStatCard(
                 "Tổng giao dịch",
-                "12,842",
-                new Color(111,66,193)
+                totalTransactionLabel,
+                new Color(111,66,193),
+                "icons/transaction.png"
         );
-
         transactionCard.setBounds(320,130,250,90);
         add(transactionCard);
         
+        totalDepositLabel = new JLabel("0");
         JPanel depositCard = createStatCard(
                 "Tổng tiền nạp",
-                "1,256,780,000 VND",
-                new Color(40,167,69)
+                totalDepositLabel,
+                new Color(40,167,69),
+                "icons/deposit.png"
         );
-
-        depositCard.setBounds(595,130,250,90);
+        depositCard.setBounds(595,130,270,90);
         add(depositCard);
         
+        totalWithdrawLabel = new JLabel("0");
         JPanel withdrawCard = createStatCard(
                 "Tổng tiền rút",
-                "874,230,000 VND",
-                new Color(220,53,69)
+                totalWithdrawLabel,
+                new Color(220,53,69),
+                "icons/withdraw.png"
         );
-
-        withdrawCard.setBounds(870,130,250,90);
+        withdrawCard.setBounds(890,130,255,90);
         add(withdrawCard);
         
         JPanel balancePanel = new JPanel(null);
-
         balancePanel.setBackground(new Color(255,248,220));
-
         balancePanel.setBorder(
-                BorderFactory.createLineBorder(
-                        new Color(255,193,7)
-                )
-        );
-
+                BorderFactory.createLineBorder(new Color(255,193,7)
+                ));
         balancePanel.setBounds(45,230,1100,45);
 
-        JLabel balanceLabel = new JLabel(
-                "Tổng số dư toàn hệ thống: 382,550,000 VND"
-        );
+        totalBalanceLabel = new JLabel("Tổng số dư toàn hệ thống: 0 VND");
+        totalBalanceLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        totalBalanceLabel.setForeground(new Color(255,140,0));
+        totalBalanceLabel.setBounds(20,5,800,35);
 
-        balanceLabel.setFont(
-                new Font("Segoe UI", Font.BOLD, 20)
-        );
-
-        balanceLabel.setForeground(
-                new Color(255,140,0)
-        );
-
-        balanceLabel.setBounds(20,5,700,35);
-
-        balancePanel.add(balanceLabel);
+        ImageIcon balanceIcon = new ImageIcon(ClassLoader.getSystemResource("icons/balance.png"));
+        Image i6 = balanceIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        totalBalanceLabel.setIcon(new ImageIcon(i6));
+        
+        balancePanel.add(totalBalanceLabel);
 
         add(balancePanel);
         
@@ -203,34 +196,103 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
         backButton.addActionListener(this);
 
         loadAccounts("");
+        loadStatistics();
     }
 
-    private JPanel createStatCard(
-            String title,
-            String value,
-            Color color
-    ){
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-
+    // Tạo nhanh một ô thống kê.
+    private JPanel createStatCard(String title, JLabel valueLabel, Color color, String iconPath) {
+        JPanel panel = new JPanel(null);
         panel.setBackground(Color.WHITE);
-
         panel.setBorder(BorderFactory.createLineBorder(color,1));
 
+        // ===== ICON =====
+        ImageIcon icon = new ImageIcon(
+                ClassLoader.getSystemResource(iconPath)
+        );
+
+        Image img = icon.getImage().getScaledInstance(
+                35,
+                35,
+                Image.SCALE_SMOOTH
+        );
+        JLabel iconLabel = new JLabel(new ImageIcon(img));
+        iconLabel.setBounds(15, 10, 32, 32);
+        
+        // ===== TITLE =====
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setBounds(20,15,200,25);
+        titleLabel.setBounds(55, 15, 180, 25);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(color);
 
-        JLabel valueLabel = new JLabel(value);
+        // ===== VALUE =====
         valueLabel.setBounds(20,45,250,35);
         valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         valueLabel.setForeground(color);
 
+        panel.add(iconLabel);
         panel.add(titleLabel);
         panel.add(valueLabel);
 
         return panel;
+    }
+    
+    // Lấy dữ liệu thống kê từ DB
+    private void loadStatistics() {
+        try {
+            Conn c = new Conn();
+
+            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+
+            ResultSet rsAccount = c.s.executeQuery(
+                    "SELECT COUNT(*) AS total FROM signup2"
+            );	// Đếm số tài khoản trong bảng signup2.
+
+            if (rsAccount.next()) {		
+                totalAccountLabel.setText(formatter.format(rsAccount.getInt("total")));
+            }
+
+            ResultSet rsTransaction = c.s.executeQuery(
+                    "SELECT COUNT(*) AS total FROM bank"
+            );	// Đếm số giao dịch trong bảng bank.
+
+            if (rsTransaction.next()) {
+                totalTransactionLabel.setText(formatter.format(rsTransaction.getInt("total")));	
+            }	
+
+            ResultSet rsDeposit = c.s.executeQuery(
+                    "SELECT IFNULL(SUM(SOTIEN), 0) AS total FROM bank " +
+                    "WHERE LOAIGD = 'Nạp tiền' OR LOAIGD = 'Nhận chuyển khoản'"
+            );	// Cộng tất cả số tiền có loại giao dịch là nạp tiền hoặc nhận chuyển khoản.
+
+            double totalDeposit = 0;
+
+            if (rsDeposit.next()) {
+                totalDeposit = rsDeposit.getDouble("total");
+                totalDepositLabel.setText(formatter.format(totalDeposit) + " VND"); 
+            }
+
+            ResultSet rsWithdraw = c.s.executeQuery(
+                    "SELECT IFNULL(SUM(SOTIEN), 0) AS total FROM bank " +
+                    "WHERE LOAIGD = 'Rút tiền' OR LOAIGD = 'Chuyển khoản đi'"
+            );	// Cộng tiền rút và chuyển khoản đi.
+
+            double totalWithdraw = 0;
+
+            if (rsWithdraw.next()) {
+                totalWithdraw = rsWithdraw.getDouble("total");
+                totalWithdrawLabel.setText(formatter.format(totalWithdraw) + " VND");
+            }
+
+            double totalBalance = totalDeposit - totalWithdraw;		// Tổng số dư
+
+            totalBalanceLabel.setText(
+                    "Tổng số dư toàn hệ thống: " + formatter.format(totalBalance) + " VND"
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Không thể tải dữ liệu thống kê từ DB!");
+        }
     }
     
     // Lấy dữ liệu DB đổ vào JTable.
@@ -497,6 +559,7 @@ public class AccountManagementPanel extends JPanel implements ActionListener {
     	} else if (ae.getSource() == refreshButton) {
             searchField.setText("");
             loadAccounts("");	// xóa tìm kiếm và load toàn bộ.
+            loadStatistics();
             
         } else if (ae.getSource() == backButton) {
             Container parent = getParent();						// Lấy container cha của panel này (AdminDashboard.contentPanel)
