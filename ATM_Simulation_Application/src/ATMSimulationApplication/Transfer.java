@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
-import java.util.Date;
 
 public class Transfer extends JFrame implements ActionListener {
 
@@ -104,7 +103,12 @@ public class Transfer extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Số tiền không hợp lệ!");
                 return;
             }
-
+            
+            if (amount <= 0) {
+                JOptionPane.showMessageDialog(null, "Số tiền phải lớn hơn 0!");
+                return;
+            }
+            
             Conn c = new Conn();
 
             ResultSet receiverRs = c.s.executeQuery(
@@ -116,24 +120,34 @@ public class Transfer extends JFrame implements ActionListener {
                 return;
             }
 
-            String receiverPin = receiverRs.getString("MA_PIN");
+            String senderCard = null;
+            ResultSet rs = c.s.executeQuery("SELECT SOTHE FROM login WHERE MA_PIN = '" + pin + "'");
+            	
+            if (rs.next()) {
+				senderCard = rs.getString("SOTHE");
+			}
 
-            if (receiverPin.equals(pin)) {	// False
+            if (senderCard == null) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy tài khoản gửi!");
+                return;
+            }
+            
+            if (senderCard.equals(receiverCard)) {
                 JOptionPane.showMessageDialog(null, "Không thể chuyển khoản cho chính mình!");
                 return;
             }
-
+            
             ResultSet senderRs = c.s.executeQuery(
-                    "select * from bank where pin = '" + pin + "'"
-            );
+            	    "SELECT * FROM bank WHERE SOTHE = '" + senderCard + "'"
+            	);
 
-            int balance = 0;
-
-            while (senderRs.next()) {
-                if (senderRs.getString("type").equalsIgnoreCase("Deposit") || senderRs.getString("type").equalsIgnoreCase("Transfer In")) {	// Type = Deposit hoặc Transfer In
-                    balance += Integer.parseInt(senderRs.getString("amount"));
-                } else {														// Type = Withdrawal hoặc Transfer Out	
-                    balance -= Integer.parseInt(senderRs.getString("amount"));
+            int balance = 0;	// Số dư
+            
+            while(senderRs.next()){	// Lặp qua toàn bộ lịch sử giao dịch của user.
+            	if(senderRs.getString("LOAIGD").equals("Nạp tiền") || senderRs.getString("LOAIGD").equals("Nhận chuyển khoản")){	// Type = Nạp tiền hoặc Nhận chuyển khoản
+            		balance += senderRs.getInt("SOTIEN");	// -> + vào số dư
+                }else{										// Type = Rút tiền hoặc Chuyển khoản đi
+                	balance -= senderRs.getInt("SOTIEN");	// - vào số dư
                 }
             }
 
@@ -142,10 +156,14 @@ public class Transfer extends JFrame implements ActionListener {
                 return;
             }
 
-            Date date = new Date();
-
-            c.s.executeUpdate("insert into bank values('" + pin + "', '" + date + "', 'Transfer Out', '" + amount + "')");			// Người gửi
-            c.s.executeUpdate("insert into bank values('" + receiverPin + "', '" + date + "', 'Transfer In', '" + amount + "')");	// Người nhận
+            c.s.executeUpdate(
+            	    "INSERT INTO bank(SOTHE, NGAYGD, LOAIGD, SOTIEN) " +
+            	    "VALUES('" + senderCard + "', NOW(), 'Chuyển khoản đi', '" + amount + "')"
+            	);	// Người gửi
+            c.s.executeUpdate(
+            	    "INSERT INTO bank(SOTHE, NGAYGD, LOAIGD, SOTIEN) " +
+            	    "VALUES('" + receiverCard + "', NOW(), 'Nhận chuyển khoản', '" + amount + "')"
+            	);	// Người nhận
 
             JOptionPane.showMessageDialog(null, "Chuyển khoản thành công!");
 

@@ -2,8 +2,9 @@ package ATMSimulationApplication;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+
 import javax.swing.*;
-import java.util.*;
 
 public class Deposit extends JFrame implements ActionListener{
     
@@ -66,24 +67,49 @@ public class Deposit extends JFrame implements ActionListener{
     }
     
     // Xử lý sự kiện Btn
-    public void actionPerformed(ActionEvent event){
+    public void actionPerformed(ActionEvent ae){
         try{        
-            String amount = t1.getText();	
-            Date date = new Date(); 			// Lưu thời gian nạp tiền
-            if(event.getSource() == b1){		// Btn NẠP TIỀN
-                if(t1.getText().equals("")){	// Nếu t1 rỗng
-                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền bạn muốn nạp!");
-                }else{
-                    Conn c1 = new Conn();	
-                    c1.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Deposit', '"+amount+"')");
-                    JOptionPane.showMessageDialog(null, "Nạp tiền thành công!");	
-                    setVisible(false);							// Close cửa sổ hiện tại
-                    new Transactions(pin).setVisible(true);		// Quay lại màn hình Transactions
+            String amount = t1.getText().trim();	
+            
+            if(ae.getSource() == b1){		// Btn NẠP TIỀN
+                if(amount.equals("")){	// Nếu t1 rỗng
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền bạn muốn gửi!");
+                    return;                    
                 }
-            }else if(event.getSource() == b2){		// Btn QUAY LẠI
+           	
+                Integer.parseInt(amount);
+                String cardno = null;
+                	
+                Conn c = new Conn();
+                ResultSet rs = c.s.executeQuery("SELECT SOTHE FROM login WHERE MA_PIN = '" + pin + "'");
+                	
+                if (rs.next()) {
+					cardno = rs.getString("SOTHE");
+				}
+                	
+                if (cardno == null) {
+                	JOptionPane.showMessageDialog(null, "Không tìm thấy số thẻ!");
+                    return;
+                }
+                    
+                Conn c1 = new Conn();
+
+                c1.s.executeUpdate(
+                		"INSERT INTO bank(SOTHE, NGAYGD, LOAIGD, SOTIEN) " +
+                		"VALUES('" + cardno + "', NOW(), 'Nạp tiền', '" + amount + "')"
+                );
+
+                JOptionPane.showMessageDialog(null, "Nạp tiền thành công!");
+
                 setVisible(false);
                 new Transactions(pin).setVisible(true);
+                                
+            }else if(ae.getSource() == b2){		// Btn QUAY LẠI
+                setVisible(false);
+                new Transactions(pin).setVisible(true);
+                
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         }

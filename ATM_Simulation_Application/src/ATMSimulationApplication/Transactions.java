@@ -92,20 +92,26 @@ public class Transactions extends JFrame implements ActionListener {
 		if (e.getSource() == b1) {				// Btn NẠP TIỀN
 			setVisible(false);
 			new Deposit(pin).setVisible(true);
+			
 		} else if (e.getSource() == b2) {	    // Btn RÚT TIỀN
 			setVisible(false);
 			new FastCash(pin).setVisible(true);
+			
 		} else if (e.getSource() == b3) {		// Btn CHUYỂN KHOẢN
 			setVisible(false);
 			new Transfer(pin).setVisible(true);
+			
 		} else if (e.getSource() == b4) {		// Btn IN SAO KÊ
 			new MiniStatement(pin).setVisible(true);
+			
 		} else if (e.getSource() == b5) {		// Btn ĐỔI PIN
 			setVisible(false);
 			new PinChange(pin).setVisible(true);
+			
 		} else if (e.getSource() == b6) {		// Btn TRUY VẤN SỐ DƯ
 			this.setVisible(false);
 			new BalanceEnquiry(pin).setVisible(true);
+			
 		} else if (e.getSource() == b7) {       // Btn THOÁT
 			this.setVisible(false);
 			new Login().setVisible(true);

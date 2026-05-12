@@ -113,14 +113,12 @@ public class PinChange extends JFrame implements ActionListener{
                 Conn c1 = new Conn();	// Tạo đối tượng kết nối tới DB.
                 
                 // Cập nhật PIN cho các table đang lưu PIN cũ
-                String q1 = "update bank set pin = '"+rpin+"' where pin = '"+pin+"' ";
-                String q2 = "update login set MA_PIN = '"+rpin+"' where MA_PIN = '"+pin+"' ";
-                String q3 = "update signup2 set MA_PIN = '"+rpin+"' where MA_PIN = '"+pin+"' ";
+                String q1 = "update login set MA_PIN = '"+rpin+"' where MA_PIN = '"+pin+"' ";
+                //String q2 = "update signup2 set MA_PIN = '"+rpin+"' where MA_PIN = '"+pin+"' ";
 
                 // Thực thi cmd UPDATE
                 c1.s.executeUpdate(q1);
-                c1.s.executeUpdate(q2);
-                c1.s.executeUpdate(q3);
+                //c1.s.executeUpdate(q2);
 
                 JOptionPane.showMessageDialog(null, "Mã PIN đã được thay đổi thành công!");
                 setVisible(false);
@@ -130,6 +128,7 @@ public class PinChange extends JFrame implements ActionListener{
             	setVisible(false);
                 new Transactions(pin).setVisible(true);         
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         }

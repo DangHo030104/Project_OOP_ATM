@@ -3,7 +3,6 @@ package ATMSimulationApplication;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.Date;
 import java.sql.*;
 
 public class Withdrawal extends JFrame implements ActionListener{
@@ -75,53 +74,76 @@ public class Withdrawal extends JFrame implements ActionListener{
     // Xử lý sự kiện Btn
     public void actionPerformed(ActionEvent ae) {
         try{        
-            String amount = t1.getText();
-            Date date = new Date();			// Lưu thời gian giao dịch rút tiền.
+            String amount = t1.getText().trim();
             
             if(ae.getSource() == b1){		// Btn RÚT TIỀN
-                if(t1.getText().equals("")){	
+                if(amount.equals("")){	
                     JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền bạn muốn rút!");
-                }else{
-                    Conn c1 = new Conn();
+                    return;
+                }
+                
+                int iAmount = Integer.parseInt(amount);
+                if (iAmount > 10000000) {
+                    JOptionPane.showMessageDialog(null, "Số tiền rút tối đa không được vượt quá 10.000.000 VND!");
+                    return;
+                }
+                
+                String cardno = null;
+                Conn c = new Conn();
+                ResultSet rs = c.s.executeQuery("SELECT SOTHE FROM login WHERE MA_PIN = '" + pin + "'");
+                	
+                if (rs.next()) {
+					cardno = rs.getString("SOTHE");
+				}
+
+                if (cardno == null) {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy số thẻ!");
+                    return;
+                }
+                
+                Conn c1 = new Conn();
                     
-                    ResultSet rs = c1.s.executeQuery("select * from bank where pin = '"+pin+"'");	// Statemnet chạy cmd SELECT và rs đọc data mà SELECT trả về từ DB. -> Lấy toàn bộ giao dịch của người dùng theo PIN
-                    
-                    int balance = 0;	// Khởi tạo số dư
-                    
+                ResultSet rs1 = c1.s.executeQuery(
+                		"SELECT * FROM bank WHERE SOTHE = '" + cardno + "'"
+                );	// Statemnet chạy cmd SELECT và rs đọc data mà SELECT trả về từ DB. -> Lấy toàn bộ giao dịch của người dùng theo số thẻ.      
+                                
                     /* rs.next(): chuyển con trỏ sang dòng tiếp theo trong ResultSet
 						- nếu còn dòng → trả về true
 						- nếu hết dòng → trả về false */
                     
-                    while(rs.next()){	// Lặp qua toàn bộ lịch sử giao dịch của user.
-                       if(rs.getString("type").equals("Deposit") || rs.getString("type").equals("Transfer In")){				// Type = Deposit hoặc Transfer In
-                           balance += Integer.parseInt(rs.getString("amount"));	// Chuyển string sang Integer -> Cộng vào số dư
-                       }else{													// Type = Withdrawal hoặc Transfer Out
-                           balance -= Integer.parseInt(rs.getString("amount"));	// Trừ vào số dư
-                       }
+                int balance = 0;	// Số dư
+                
+                while(rs1.next()){	// Lặp qua toàn bộ lịch sử giao dịch của user.
+                	if(rs1.getString("LOAIGD").equals("Nạp tiền") || rs1.getString("LOAIGD").equals("Nhận chuyển khoản")){	// Type = Nạp tiền hoặc Nhận chuyển khoản
+                		balance += rs1.getInt("SOTIEN");	// -> + vào số dư
+                    }else{								// Type = Rút tiền hoặc Chuyển khoản đi
+                    	balance -= rs1.getInt("SOTIEN");	// - vào số dư
                     }
-
-                    if (Integer.parseInt(amount) > 10000000) {
-                        JOptionPane.showMessageDialog(null, "Số tiền rút tối đa không được vượt quá 10.000.000 VND!");
-                        return;
-                    }
-                    
-                    // Kiểm tra số dư còn đủ để rút tiền?
-                    if(balance < Integer.parseInt(amount)){		
-                        JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");
-                        return;  // Thoát 
-                    }
-                    
-                    // Nếu đủ tiền -> Lưu giao dịch rút tiền vào DB.
-                    c1.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Withdrawl', '"+amount+"')");
-                    JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		// Đã trừ thành công ? đồng.
-                    
-                    setVisible(false);
-                    new Transactions(pin).setVisible(true);		
                 }
+                    
+                // Kiểm tra số dư còn đủ để rút tiền?
+                if(balance < iAmount){		
+                	JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");
+                    return;   
+                }
+                    
+                // Nếu đủ tiền -> Lưu giao dịch rút tiền vào DB.
+                c1.s.executeUpdate(
+                        "INSERT INTO bank(SOTHE, NGAYGD, LOAIGD, SOTIEN) " +
+                        "VALUES('" + cardno + "', NOW(), 'Rút tiền', '" + amount + "')"
+                    );
+                
+                JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		// Đã trừ thành công ? đồng.
+                    
+                setVisible(false);
+                new Transactions(pin).setVisible(true);		
+                
             }else if(ae.getSource() == b2){		// Btn BACK
                 setVisible(false);
                 new Transactions(pin).setVisible(true);
+                
             }
+            
         }catch(Exception e){
                 e.printStackTrace();				// in chi tiết lỗi ra console                
         }

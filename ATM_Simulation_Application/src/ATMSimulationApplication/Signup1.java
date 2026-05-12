@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 public class Signup1 extends JFrame implements ActionListener {
 
@@ -25,7 +26,7 @@ public class Signup1 extends JFrame implements ActionListener {
 	Random ran = new Random();
 	long first4 = (ran.nextLong() % 9000L) + 1000L; // ran.nextLong(): sinh số kiểu long % 9000L: giới hạn về khoảng
 													// 9000 số + 1000L: để tránh số quá nhỏ
-	String first = "" + Math.abs(first4); // Bỏ số âm, sau đó đổi sang String
+	String first = "" + Math.abs(first4); 			// Bỏ số âm, sau đó đổi sang String
 
 	Signup1() {
 		setTitle("NEW ATM ACCOUNT APPLICATION FORM");
@@ -236,7 +237,8 @@ public class Signup1 extends JFrame implements ActionListener {
 
 		String formno = first;
 		String name = t1.getText();
-		String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText(); // Lấy dob dưới dạng Text
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String dob = sdf.format(dateChooser.getDate());
 		
 		String gender = null;	
 		if (r1.isSelected()) { // .isSelected() → kiểm tra r1 có được chọn không
@@ -290,7 +292,7 @@ public class Signup1 extends JFrame implements ActionListener {
 				}
 			} else if (ae.getSource() == b2) { // Quay lại
 				setVisible(false);
-				new Login().setVisible(true);
+				new AccountManagementPanel().setVisible(true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

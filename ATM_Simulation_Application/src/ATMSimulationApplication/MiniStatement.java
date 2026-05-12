@@ -7,9 +7,8 @@ import javax.swing.table.DefaultTableModel;
 
 import java.sql.*;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.Locale;
-import java.util.Date;
 
 public class MiniStatement extends JFrame implements ActionListener{
  
@@ -88,57 +87,60 @@ public class MiniStatement extends JFrame implements ActionListener{
         // Truy vấn bảng bank để lấy lịch sử giao dịch và tính số dư
         try{
             int balance = 0;	// Số dư
-            
+            String cardno = null;   	
+		 	       	
             Conn c1  = new Conn();	// Tạo kết nối DB mới để truy vấn bảng bank.
+            ResultSet rs = c1.s.executeQuery(
+                    "SELECT SOTHE FROM login WHERE MA_PIN = '" + pin + "'"
+                );
+
+            if (rs.next()) {
+                cardno = rs.getString("SOTHE");
+            }
             
-            ResultSet rs = c1.s.executeQuery("SELECT * FROM bank where pin = '"+pin+"'");
+            ResultSet rs1 = c1.s.executeQuery(
+            	    "SELECT * FROM bank WHERE SOTHE = '" + cardno + "' ORDER BY NGAYGD DESC"
+            	);
             
-            while (rs.next()) {	// True
-                String type = rs.getString("type");
-                int amount = Integer.parseInt(rs.getString("amount"));
+            while (rs1.next()) {	// True
+            	String type = rs1.getString("LOAIGD");
+            	int amount = rs1.getInt("SOTIEN");
 
                 String typeVi;
                 String amountDisplay;
 
-                if (type.equalsIgnoreCase("Deposit") || type.equalsIgnoreCase("Transfer In")) {
+                if (type.equalsIgnoreCase("Nạp tiền")) {
                     typeVi = "Nạp tiền";
                     balance += amount;
                     amountDisplay = " + " + formatter.format(amount) + " VND";
+
+                } else if (type.equalsIgnoreCase("Nhận chuyển khoản")) {
+                    typeVi = "Nhận chuyển khoản";
+                    balance += amount;
+                    amountDisplay = " + " + formatter.format(amount) + " VND";
+
+                } else if (type.equalsIgnoreCase("Chuyển khoản đi")) {
+                    typeVi = "Chuyển khoản đi";
+                    balance -= amount;
+                    amountDisplay = " - " + formatter.format(amount) + " VND";
+
                 } else {
                     typeVi = "Rút tiền";
                     balance -= amount;
                     amountDisplay = " - " + formatter.format(amount) + " VND";
                 }
 
-                String dateRaw = rs.getString("date");
-                String formattedDate = dateRaw;
-
-                try {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat(
-                        "EEE MMM dd HH:mm:ss z yyyy",
-                        Locale.ENGLISH		// vì Java đang lưu ngày theo định dạng tiếng Anh (ví dụ: "Wed Sep 15 14:30:00 GMT 2021")
-                    );
-
-                    SimpleDateFormat outputFormat = new SimpleDateFormat(
-                        "dd/MM/yyyy - HH:mm:ss"
-                    );
-
-                    Date parsedDate = inputFormat.parse(dateRaw);	// Chuyển String → Date object
-                    formattedDate = outputFormat.format(parsedDate);		// Format lại Date object
-
-                } catch (Exception ex) {
-                    formattedDate = dateRaw;	// Nếu lỗi parse dùng date gốc.
-                }
+                String date = rs1.getString("NGAYGD");
 
                 model.addRow(new Object[]{  	// Thêm 1 dòng dữ liệu vào bảng.
-                        formattedDate,
+                        date,
                         typeVi,
                         amountDisplay
                 });
             }
             // Hiển thị tổng số dư
             l4.setText("Số dư tài khoản: " + formatter.format(balance) + " VND");
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
           

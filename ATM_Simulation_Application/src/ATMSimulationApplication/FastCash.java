@@ -83,42 +83,67 @@ public class FastCash extends JFrame implements ActionListener {
     // Xử lý sự kiện Btn
     public void actionPerformed(ActionEvent ae) {
         try {
-            String amount = ((JButton)ae.getSource()).getText().replace(".", "");	// Vd: "5.000.000" → "5000000"
-            
-            Conn c = new Conn();
-            
-            ResultSet rs = c.s.executeQuery("select * from bank where pin = '"+pin+"'");	// Lấy toàn bộ giao dịch của user theo PIN
-            
-            int balance = 0;	// Số dư
-            while (rs.next()) {	// Duyệt qua từng giao dịch để tính số dư (True).
-                if (rs.getString("type").equals("Deposit") || rs.getString("type").equals("Transfer In")) {		// Type = Deposit hoặc Transfer In
-                    balance += Integer.parseInt(rs.getString("amount"));	// + vào số dư
-                } else {													// Type = Withdrawal hoặc Transfer Out
-                    balance -= Integer.parseInt(rs.getString("amount"));	// - vào số dư
-                }
-            } 
-            
-            if (ae.getSource() == b6) {		// Btn SỐ KHÁC
-            	this.setVisible(false);
-            	new Withdrawal(pin).setVisible(true);
-            }
-            
-            if (ae.getSource() != b7 && balance < Integer.parseInt(amount)) {	// Nếu nút bấm khác "QUAY LẠI" và số dư < số tiền cần rút
-                JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");		
-                return;		// Thoát hàm
-            }
-
             if (ae.getSource() == b7) {		// Btn "QUAY LẠI"
                 this.setVisible(false);
                 new Transactions(pin).setVisible(true);
-            }else{
-                Date date = new Date();		// Lưu thời gian giao dịch rút tiền
-                c.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Withdrawl', '"+amount+"')");
-                JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		
-                    
-                setVisible(false);
-                new Transactions(pin).setVisible(true);
+                return;
             }
+        	
+            if (ae.getSource() == b6) {		// Btn SỐ KHÁC
+            	this.setVisible(false);
+               	new Withdrawal(pin).setVisible(true);
+            	return;		
+            }
+        	
+            String amount = ((JButton)ae.getSource()).getText().replace(".", "");	// Vd: "5.000.000" → "5000000"
+            int iAmount = Integer.parseInt(amount);
+            
+            String cardno = null;
+            Conn c = new Conn();
+            ResultSet rs = c.s.executeQuery("SELECT SOTHE FROM login WHERE MA_PIN = '" + pin + "'");
+            	
+            if (rs.next()) {
+				cardno = rs.getString("SOTHE");
+			}
+
+            if (cardno == null) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy số thẻ!");
+                return;
+            }
+            
+            Conn c1 = new Conn();
+            
+            ResultSet rs1 = c1.s.executeQuery(
+                    "SELECT * FROM bank WHERE SOTHE = '" + cardno + "'"
+                    );	// Lấy toàn bộ giao dịch của user theo số thẻ.
+            
+            int balance = 0;	// Số dư
+            
+            while(rs1.next()){	// Lặp qua toàn bộ lịch sử giao dịch của user.
+            	if(rs1.getString("LOAIGD").equals("Nạp tiền") || rs1.getString("LOAIGD").equals("Nhận chuyển khoản")){	// Type = Nạp tiền hoặc Nhận chuyển khoản
+            		balance += rs1.getInt("SOTIEN");	// -> + vào số dư
+                }else{									// Type = Rút tiền hoặc Chuyển khoản đi
+                	balance -= rs1.getInt("SOTIEN");	// - vào số dư
+                }
+            }
+            
+            // Kiểm tra số dư còn đủ để rút tiền?
+            if(balance < iAmount){		
+            	JOptionPane.showMessageDialog(null, "Số dư không đủ để rút tiền!");
+                return;   
+            }
+            
+            // Nếu đủ tiền -> Lưu giao dịch rút tiền vào DB.
+            c1.s.executeUpdate(
+                    "INSERT INTO bank(SOTHE, NGAYGD, LOAIGD, SOTIEN) " +
+                    "VALUES('" + cardno + "', NOW(), 'Rút tiền', '" + amount + "')"
+                );
+            
+            JOptionPane.showMessageDialog(null, "Rút tiền thành công!");		// Đã trừ thành công ? đồng.
+                
+            setVisible(false);
+            new Transactions(pin).setVisible(true);	                  
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

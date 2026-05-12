@@ -14,7 +14,7 @@ public class Login extends JFrame implements ActionListener {
 	JLabel l1, l2, l3;
 	JTextField tf1;
 	JPasswordField pf2;
-	JButton b1, b2, b3;
+	JButton b1, b2;
 
 	Login() {
 		setTitle("ATM Login");
@@ -41,7 +41,7 @@ public class Login extends JFrame implements ActionListener {
 		add(l1);
 
 		// Card No
-		l2 = new JLabel("SỐ THẺ:");
+		l2 = new JLabel("Số thẻ:");
 		l2.setFont(new Font("Arial", Font.BOLD, 20));
 		l2.setForeground(Color.WHITE);
 		l2.setBounds(200, 150, 375, 30);
@@ -57,7 +57,7 @@ public class Login extends JFrame implements ActionListener {
 		add(tf1);
 
 		// PIN
-		l3 = new JLabel("MÃ PIN:");
+		l3 = new JLabel("Mã PIN:");
 		l3.setFont(new Font("Arial", Font.BOLD, 20));
 		l3.setForeground(Color.WHITE);
 		l3.setBounds(200, 200, 375, 30);
@@ -76,7 +76,7 @@ public class Login extends JFrame implements ActionListener {
 		b1.setBackground(Color.BLACK); // Nền đen
 		b1.setForeground(Color.WHITE); // Chữ trắng
 		b1.setFont(new Font("Arial", Font.BOLD, 14));
-		b1.setBounds(300, 280, 110, 30);
+		b1.setBounds(420, 280, 110, 30);
 		add(b1);
 
 		b2 = new JButton("Xóa");
@@ -86,17 +86,9 @@ public class Login extends JFrame implements ActionListener {
 		b2.setBounds(470, 240, 60, 30);
 		add(b2);
 
-		b3 = new JButton("Đăng ký");
-		b3.setBackground(Color.BLACK);
-		b3.setForeground(Color.WHITE);
-		b3.setFont(new Font("Arial", Font.BOLD, 14));
-		b3.setBounds(420, 280, 110, 30);
-		add(b3);
-
 		// Đăng ký listener cho các button.
 		b1.addActionListener(this); // this -> Login
 		b2.addActionListener(this);
-		b3.addActionListener(this);
 
         ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
         Image iii2 = iii1.getImage().getScaledInstance(800,500,Image.SCALE_SMOOTH);  // SCALE_SMOOTH:giữ nguyên chất lượng ảnh khi resize.
@@ -136,10 +128,8 @@ public class Login extends JFrame implements ActionListener {
 			} else if (event.getSource() == b2) { // CLEAR
 				tf1.setText("");
 				pf2.setText("");
-			} else if (event.getSource() == b3) { // SIGN UP
-				setVisible(false);
-				new Signup1().setVisible(true);
-			}
+				
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

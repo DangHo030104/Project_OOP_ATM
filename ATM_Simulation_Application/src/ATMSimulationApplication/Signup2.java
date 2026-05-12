@@ -141,12 +141,12 @@ public class Signup2 extends JFrame implements ActionListener {
 		l7.setBounds(100, 390, 200, 30);
 		add(l7);
 
-		l8 = new JLabel("XXXX");
+		l8 = new JLabel("XXXXXX");
 		l8.setFont(new Font("Raleway", Font.BOLD, 18));
 		l8.setBounds(350, 390, 200, 30);
 		add(l8);
 
-		l9 = new JLabel("(Mật khẩu gồm 4 chữ số)");
+		l9 = new JLabel("(Mã PIN của bạn gồm 6 chữ số)");
 		l9.setFont(new Font("Raleway", Font.ITALIC, 12));
 		l9.setBounds(100, 410, 200, 20);
 		add(l9);
@@ -259,14 +259,15 @@ public class Signup2 extends JFrame implements ActionListener {
 		
 		String bankBranch = t1.getText();
 		
-		// Tạo số thẻ ATM random.
 		Random ran = new Random();
+		// Tạo số thẻ ATM random (16 số).
 		long first7 = (ran.nextLong() % 90000000L) + 5040936000000000L;
 		String cardno = "" + Math.abs(first7);
 
-		// Tạo PIN random
-		long first3 = (ran.nextLong() % 9000L) + 1000L;
-		String pin = "" + Math.abs(first3);
+		// Tạo PIN random (6 số)
+		String pin = String.valueOf(
+			    100000 + ran.nextInt(900000)
+		);  // Sinh số từ 0->899999, sau đó cộng thêm 100000 để đảm bảo PIN luôn có 6 số.
 
 		String facility = "";   // Gom các dịch vụ đã chọn
 		if (c1.isSelected()) {
@@ -297,7 +298,7 @@ public class Signup2 extends JFrame implements ActionListener {
 				} else {
 					Conn c1 = new Conn();
 					
-					String q1 = "insert into signup2 values('" + formno + "','" + atype + "','" + ctype + "','" + bankBranch + "','" + cardno + "','" + pin + "','" + facility + "')";
+					String q1 = "insert into signup2 values('" + formno + "','" + atype + "','" + ctype + "','" + bankBranch + "','" + cardno + "','" + facility + "')";
 					
 					String q2 = "insert into login values('" + formno + "','" + cardno + "','" + pin + "')";
 					
@@ -307,7 +308,7 @@ public class Signup2 extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "Card Number: " + cardno + "\n Pin:" + pin);
 					
 					setVisible(false);
-					new Login().setVisible(true);
+					new AccountManagementPanel().setVisible(true);
 				}
 
 			} else if (ae.getSource() == b2) {    // Btn Quay lại
