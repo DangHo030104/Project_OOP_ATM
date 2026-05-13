@@ -1,0 +1,88 @@
+CREATE DATABASE ATM_Simulation_Application;
+
+USE ATM_Simulation_Application;  -- Lựa chọn DB sử dụng
+
+-- ------------------------------------------------------- --
+
+CREATE TABLE signup1 (
+    FORMNO VARCHAR(20) PRIMARY KEY,
+    HOTEN VARCHAR(100) NOT NULL,
+    NGAYSINH VARCHAR(20) NOT NULL,
+    GIOITINH VARCHAR(20) NOT NULL,
+    CCCD_CMND VARCHAR(20) NOT NULL UNIQUE,
+    DIENTHOAI VARCHAR(15) NOT NULL,
+    EMAIL VARCHAR(100),
+    DIACHI VARCHAR(255),
+    QUAN_HUYEN VARCHAR(50),
+    TINH_TP VARCHAR(50),
+    QUOCTICH VARCHAR(50)
+);
+
+select * from signup1;
+
+-- ----------------------------------------- --
+
+CREATE TABLE signup2 (
+    FORMNO VARCHAR(20) PRIMARY KEY,
+    LOAI_TK VARCHAR(50) NOT NULL,
+    LOAI_THE VARCHAR(50) NOT NULL,
+    CHINHANH_NH VARCHAR(100) NOT NULL,
+    SOTHE VARCHAR(25) NOT NULL UNIQUE,
+    DICHVU VARCHAR(255),
+    FOREIGN KEY (FORMNO) REFERENCES signup1(FORMNO)
+);
+
+select * from signup2;
+
+-- ----------------------------------------- --
+
+CREATE TABLE login (
+    FORMNO VARCHAR(20) PRIMARY KEY,
+    SOTHE VARCHAR(25) NOT NULL UNIQUE,
+    MA_PIN VARCHAR(255) NOT NULL,
+    FOREIGN KEY (FORMNO) REFERENCES signup1(FORMNO)
+);
+
+select * from login;
+
+-- ----------------------------------------- --
+
+-- create table bank (
+-- 	pin varchar(10), 
+--     date varchar(50), 
+--     type varchar(20), 
+--     amount varchar(20)
+-- );
+
+CREATE TABLE bank (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    SOTHE VARCHAR(25) NOT NULL,
+    NGAYGD DATETIME NOT NULL,
+    LOAIGD VARCHAR(30) NOT NULL,
+    SOTIEN DECIMAL(15,0) NOT NULL,
+    FOREIGN KEY (SOTHE) REFERENCES login(SOTHE)
+);
+
+select * from bank;
+
+-- ----------------------------------------- --
+
+create table admin (
+	username varchar(50) primary key,
+    password varchar(50)
+);
+
+insert into admin values (
+	'black', '030104'
+);
+
+select * from admin;
+
+-- ----------------------------------------- --
+
+show tables;
+
+show databases;
+
+
+
