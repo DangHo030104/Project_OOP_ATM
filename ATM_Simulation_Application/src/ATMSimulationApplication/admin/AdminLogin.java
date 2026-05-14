@@ -80,7 +80,7 @@ public class AdminLogin extends JFrame implements ActionListener {
 		atmLabel.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 		atmLabel.setForeground(Color.WHITE);
 		atmLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		atmLabel.setText("<html><u>ATM Login</u></html>");
+		atmLabel.setText("<html><u>ATM Login</u></html>");	// Sử dụng HTML để gạch chân văn bản trong JLabel
 		add(atmLabel);
 
 		forgotPasswordLabel = new JLabel("Quên mật khẩu?");

@@ -18,10 +18,10 @@ public class ATMLogin extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	JLabel l1, l2, l3, adminLabel;
+	JLabel l1, l2, l3, adminLabel, forgotPinLabel;
 	JTextField tf1;
 	JPasswordField pf2;
-	JButton b1, b2;
+	JButton b1;
 
 	public ATMLogin() {
 		setTitle("ATM Login");
@@ -85,13 +85,20 @@ public class ATMLogin extends JFrame implements ActionListener {
 		b1.setFont(new Font("Arial", Font.BOLD, 14));
 		b1.setBounds(300, 280, 230, 30);
 		add(b1);
+		
+		forgotPinLabel = new JLabel("Quên mã PIN?");
+		forgotPinLabel.setForeground(Color.WHITE);
+		forgotPinLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		forgotPinLabel.setBounds(440, 235, 120, 25);
+		forgotPinLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		add(forgotPinLabel);
 
-		b2 = new JButton("Xóa");
-		b2.setBackground(Color.BLACK);
-		b2.setForeground(Color.WHITE);
-		b2.setFont(new Font("Arial", Font.BOLD, 14));
-		b2.setBounds(470, 240, 60, 30);
-		add(b2);
+		forgotPinLabel.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent e) {
+		        setVisible(false);
+		        new ForgotPin();
+		    }
+		});
 		
 		adminLabel = new JLabel("Admin Login");
 		adminLabel.setBounds(650, 410, 140, 30);
@@ -125,8 +132,7 @@ public class ATMLogin extends JFrame implements ActionListener {
 		});
 		
 		// Đăng ký listener cho các button.
-		b1.addActionListener(this); // this -> Login
-		b2.addActionListener(this);
+		b1.addActionListener(this); // this -> ATMLogin
 
         ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
         Image iii2 = iii1.getImage().getScaledInstance(800,500,Image.SCALE_SMOOTH);  // SCALE_SMOOTH:giữ nguyên chất lượng ảnh khi resize.
@@ -163,12 +169,12 @@ public class ATMLogin extends JFrame implements ActionListener {
 				} else {
 					JOptionPane.showMessageDialog(null, "Số thẻ hoặc mã PIN không đúng!");
 				}
-
-			} else if (event.getSource() == b2) { // Xóa
-				tf1.setText("");
-				pf2.setText("");
-				
 			}
+//			} else if (event.getSource() == b2) { // Xóa
+//				tf1.setText("");
+//				pf2.setText("");
+//				
+//			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
