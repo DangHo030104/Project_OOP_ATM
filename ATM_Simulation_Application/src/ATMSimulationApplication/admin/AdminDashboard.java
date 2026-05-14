@@ -158,7 +158,7 @@ public class AdminDashboard extends JFrame implements ActionListener {
         } else if (ae.getSource() == exitItem) {
             int confirm = JOptionPane.showConfirmDialog(
                     null,
-                    "Bạn có chắc muốn thoát?",
+                    "Bạn có chắc chắn muốn thoát?",
                     "Xác nhận thoát",
                     JOptionPane.YES_NO_OPTION
             );

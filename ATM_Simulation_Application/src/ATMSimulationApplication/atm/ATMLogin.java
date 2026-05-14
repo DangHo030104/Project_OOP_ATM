@@ -94,8 +94,8 @@ public class ATMLogin extends JFrame implements ActionListener {
 		add(b2);
 		
 		adminLabel = new JLabel("Admin Login");
-		adminLabel.setBounds(620, 410, 140, 30);
-		adminLabel.setFont(new Font("Segoe UI", Font.ITALIC, 18));
+		adminLabel.setBounds(650, 410, 140, 30);
+		adminLabel.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 		adminLabel.setForeground(Color.WHITE);
 		adminLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		adminLabel.setText("<html><u>Admin Login</u></html>");

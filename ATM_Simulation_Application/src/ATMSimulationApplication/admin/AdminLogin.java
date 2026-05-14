@@ -16,7 +16,7 @@ public class AdminLogin extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
-    JLabel titleLabel, usernameLabel, passwordLabel, atmLabel;
+    JLabel titleLabel, usernameLabel, passwordLabel, atmLabel, registerLabel, forgotPasswordLabel;
     JTextField usernameField;
     JPasswordField passwordField;
     JButton loginButton;
@@ -72,17 +72,32 @@ public class AdminLogin extends JFrame implements ActionListener {
         loginButton.setBackground(Color.BLACK);
         loginButton.setForeground(Color.WHITE);
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
-        loginButton.setBounds(300, 230, 250, 30);
+        loginButton.setBounds(300, 250, 250, 30);
         add(loginButton);
         
 		atmLabel = new JLabel("Admin Login");
-		atmLabel.setBounds(550, 310, 120, 35);
-		atmLabel.setFont(new Font("Segoe UI", Font.ITALIC, 18));
+		atmLabel.setBounds(580, 320, 120, 35);
+		atmLabel.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 		atmLabel.setForeground(Color.WHITE);
 		atmLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		atmLabel.setText("<html><u>ATM Login</u></html>");
 		add(atmLabel);
+
+		forgotPasswordLabel = new JLabel("Quên mật khẩu?");
+		forgotPasswordLabel.setForeground(Color.WHITE);
+		forgotPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+		forgotPasswordLabel.setBounds(450, 220, 120, 25);
+		forgotPasswordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));	// Đổi con trỏ chuột thành hình bàn tay khi hover vào label
+		add(forgotPasswordLabel);
+
+		registerLabel = new JLabel("Chưa có tài khoản? Đăng ký");
+		registerLabel.setForeground(Color.WHITE);
+		registerLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+		registerLabel.setBounds(350, 300, 220, 25);
+		registerLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		add(registerLabel);
 		
+		/* Xử lý sự kiện chuột máy tính */
 		atmLabel.addMouseListener(new MouseAdapter() {
 
 		    @Override
@@ -105,7 +120,22 @@ public class AdminLogin extends JFrame implements ActionListener {
 		        atmLabel.setForeground(Color.WHITE);
 		    }
 		});
+		
+		forgotPasswordLabel.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent e) {
+		        setVisible(false);
+		        new ForgotAdminPassword();
+		    }
+		});
 
+		registerLabel.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent e) {
+		        setVisible(false);
+		        new AdminRegister();
+		    }
+		});
+		
+		// Đăng ký sự kiện ActionListener cho nút đăng nhập
         loginButton.addActionListener(this);
 
         ImageIcon ii1 = new ImageIcon(ClassLoader.getSystemResource("icons/backg.png"));
