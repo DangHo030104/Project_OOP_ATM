@@ -47,13 +47,6 @@ select * from login;
 
 -- ----------------------------------------- --
 
--- create table bank (
--- 	pin varchar(10), 
---     date varchar(50), 
---     type varchar(20), 
---     amount varchar(20)
--- );
-
 CREATE TABLE bank (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     SOTHE VARCHAR(25) NOT NULL,
@@ -67,13 +60,30 @@ select * from bank;
 
 -- ----------------------------------------- --
 
-create table admin (
-	username varchar(50) primary key,
-    password varchar(50)
+-- create table admin (
+-- 	username varchar(50) primary key,
+--     password varchar(50)
+-- );
+
+CREATE TABLE admin (
+    username VARCHAR(50) PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    gender VARCHAR(10),
+    password VARCHAR(50) NOT NULL
 );
 
-insert into admin values (
-	'black', '030104'
+-- insert into admin values (
+-- 	'black', '030104'
+-- );
+
+INSERT INTO admin(username, email, phone, gender, password)
+VALUES (
+    'black',
+    'black030104@gmail.com',
+    '0395706055',
+    'Nam',
+    '030104'
 );
 
 select * from admin;
