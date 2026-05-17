@@ -60,10 +60,6 @@ select * from bank;
 
 -- ----------------------------------------- --
 
--- create table admin (
--- 	username varchar(50) primary key,
---     password varchar(50)
--- );
 
 CREATE TABLE admin (
     username VARCHAR(50) PRIMARY KEY,
@@ -72,10 +68,6 @@ CREATE TABLE admin (
     gender VARCHAR(10),
     password VARCHAR(50) NOT NULL
 );
-
--- insert into admin values (
--- 	'black', '030104'
--- );
 
 INSERT INTO admin(username, email, phone, gender, password)
 VALUES (
